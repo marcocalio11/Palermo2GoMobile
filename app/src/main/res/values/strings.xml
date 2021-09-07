@@ -27,5 +27,9 @@
     <string name="disdici">Disdici</string>
     <string name="parcheggia">Parcheggia</string>
     <string name="nessuna_prenotazione_in_corso">Nessuna prenotazione in corso</string>
+    <string name="inserisci_indrizzo">Inserisci indrizzo</string>
+    <string name="attivando_la_consegna_express_il_mezzo_viene_cosegnato_dove_preferisci_pagando_un_piccolo_supplemento">Attivando la consegna Express, il mezzo viene cosegnato dove preferisci, pagando un piccolo supplemento</string>
+    <string name="avanti">Avanti</string>
+    <string name="annulla">Annulla</string>
 
 </resources>

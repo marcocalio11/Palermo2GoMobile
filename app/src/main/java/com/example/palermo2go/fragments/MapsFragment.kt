@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -23,14 +22,16 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.palermo2go.BookModel
+import com.example.palermo2go.models.BookModel
 import com.example.palermo2go.R
+import com.example.palermo2go.fragments.BookNowFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -43,8 +44,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.stdout.greenurb.adapters.HistoryAdapters
 import com.stdout.greenurb.adapters.InCorsoAdapter
 
@@ -67,6 +66,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     lateinit var headerView: View
     lateinit var profileImage: ImageView
     lateinit var nameSurnameTextView: TextView
+    lateinit var cartConteiner: CardView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,6 +91,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun findView() {
+        cartConteiner = rootView.findViewById(R.id.cartConteiner)
         bookNowButton = rootView.findViewById(R.id.bookNowButton)
         menulaterale = rootView.findViewById(R.id.menulaterale)
         openDrawerButton = rootView.findViewById(R.id.openDrawerButton)
@@ -102,7 +103,27 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     }
 
+    fun startFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager.beginTransaction().setCustomAnimations(
+            R.anim.slide_in,
+            R.anim.slide_in,
+            R.anim.slide_out,
+            R.anim.slide_out
+        ).addToBackStack(null).add(R.id.frameContainer, fragment).commit()
+    }
+
     private fun onClick() {
+
+        bookNowButton.setOnClickListener {
+
+            if(cartConteiner.visibility == View.VISIBLE) {
+                Toast.makeText(rootView.context, "La pagina è già aperta", Toast.LENGTH_LONG).show()
+            } else {
+                cartConteiner.visibility = View.VISIBLE
+                startFragment(BookNowFragment(this))
+            }
+
+        }
         openDrawerButton.setOnClickListener {
             drawer_layout.openDrawer( GravityCompat.START);
         }

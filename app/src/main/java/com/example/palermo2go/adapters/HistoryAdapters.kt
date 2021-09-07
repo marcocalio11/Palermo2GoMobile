@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.palermo2go.BookModel
+import com.example.palermo2go.models.BookModel
 import com.example.palermo2go.R
 
 

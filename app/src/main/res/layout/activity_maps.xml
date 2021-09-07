@@ -11,10 +11,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:animateLayoutChanges="true"
     android:id="@+id/mapsContainer"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    >
 
 
     <fragment
@@ -32,7 +34,6 @@
         android:layout_marginEnd="20dp"
         app:backgroundTint="@color/primary"
         android:src="@drawable/gps"
-
         tools:ignore="RtlHardcoded"
         android:contentDescription="@string/todo" />
 
@@ -79,7 +80,26 @@
         tools:ignore="RtlHardcoded"
         android:contentDescription="@string/openmenu" />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cartConteiner"
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        app:cardElevation="10dp"
+        android:layout_width="match_parent"
+        app:cardCornerRadius="20dp"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/frameContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+    </androidx.cardview.widget.CardView>
+
+
 </FrameLayout>
+
 
 
     <com.google.android.material.navigation.NavigationView

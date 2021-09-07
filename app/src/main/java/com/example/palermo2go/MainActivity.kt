@@ -28,7 +28,6 @@ lateinit var registratiButton: Button
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         if(!isLogged) {
             setContentView(R.layout.logged)
             startFragmentOnBack(MapsFragment())
