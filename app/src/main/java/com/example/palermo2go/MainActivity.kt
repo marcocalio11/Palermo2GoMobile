@@ -28,12 +28,12 @@ lateinit var registratiButton: Button
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
         if(!isLogged) {
-
-            startFragment(MapsFragment())
+            setContentView(R.layout.logged)
+            startFragmentOnBack(MapsFragment())
         } else {
-
+            setContentView(R.layout.activity_main)
             findViewLogin()
             onClick()
 
@@ -41,7 +41,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
+    private fun startFragmentOnBack(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().setCustomAnimations(
+            R.anim.slide_in,
+            R.anim.slide_in,
+            R.anim.slide_out,
+            R.anim.slide_out
+        ).add(R.id.parent, fragment).commit()
+    }
 
 
     private fun onClick() {

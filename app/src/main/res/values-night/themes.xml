@@ -3,6 +3,7 @@
     <style name="Theme.Palermo2Go" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="android:windowActionBar">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -19,9 +20,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -46,6 +45,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.stdout.greenurb.adapters.HistoryAdapters
 import com.stdout.greenurb.adapters.InCorsoAdapter
 
 
@@ -118,11 +118,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                R.id.bookInCorso -> {
                    Handler().postDelayed({
                        openInCorsoModal()
-                   }, 250)
+                   }, 100)
                 }
 
                R.id.lastBook -> {
-                    Toast.makeText(rootView.context,"last book", Toast.LENGTH_SHORT).show()
+                   Handler().postDelayed({
+                       openHistoryModal()
+                   }, 100)
                 }
 
                 R.id.payment -> {
@@ -139,15 +141,37 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
+    private fun openHistoryModal() {
+        val historyModal = Dialog(rootView.context, R.style.Theme_Palermo2Go)
+        historyModal.setContentView(R.layout.modal_in_corso)
+        historyModal.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.lightTrasparent)))
+        val inCorsoRecyclerView = historyModal.findViewById<RecyclerView>(R.id.inCorsoRecyclerView)
+        val nonInCorso = historyModal.findViewById<TextView>(R.id.nonInCorso)
+        val title = historyModal.findViewById<TextView>(R.id.title)
+        title.text = getString(R.string.prenotazioni_passate)
+        val arrayBook = ArrayList<BookModel>()
+        historyModal.setCanceledOnTouchOutside(true)
+        historyModal.window!!.setWindowAnimations(R.style.DialogNoAnimation)
+        //MOKCK
+        arrayBook.add(BookModel())
+        arrayBook.add(BookModel())
+        arrayBook.add(BookModel())
+        arrayBook.add(BookModel())
+        arrayBook.add(BookModel())
+        val historyAdapters = HistoryAdapters(arrayBook)
+        inCorsoRecyclerView.layoutManager = LinearLayoutManager(rootView.context, LinearLayoutManager.HORIZONTAL, false)
+        inCorsoRecyclerView.adapter = historyAdapters
+        historyModal.show()
+    }
+
     private fun openInCorsoModal() {
         val incorsoModal = Dialog(rootView.context, R.style.Theme_Palermo2Go)
         incorsoModal.setContentView(R.layout.modal_in_corso)
-        incorsoModal.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.lightTrasparent)));
-
-
+        incorsoModal.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.lightTrasparent)))
         val inCorsoRecyclerView = incorsoModal.findViewById<RecyclerView>(R.id.inCorsoRecyclerView)
         val nonInCorso = incorsoModal.findViewById<TextView>(R.id.nonInCorso)
         val arrayBook = ArrayList<BookModel>()
+        incorsoModal.setCanceledOnTouchOutside(true)
         incorsoModal.window!!.setWindowAnimations(R.style.DialogNoAnimation)
         //MOKCK
         arrayBook.add(BookModel())
