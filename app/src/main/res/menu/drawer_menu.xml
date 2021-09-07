@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:icon="@drawable/now"
+            android:id="@+id/bookInCorso"
+            android:checked="false"
+            android:title="@string/prenotazioni_in_corso"/>
+
+        <item
+
+            android:icon="@drawable/history"
+            android:id="@+id/lastBook"
+            android:checked="false"
+            android:title="@string/prenotazioni_passate" />
+
+        <item
+            android:icon="@drawable/payament"
+            android:id="@+id/payment"
+            android:checked="false"
+            android:title="@string/pagamenti" />
+
+        <item
+            android:icon="@drawable/cart"
+            android:id="@+id/cart"
+            android:checked="false"
+            android:title="@string/carrello" />
+    </group>
+</menu>

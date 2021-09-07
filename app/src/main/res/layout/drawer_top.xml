@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="190dp"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:id="@+id/cardView"
+        android:backgroundTint="@color/trans"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardElevation="0dp"
+        android:background="@color/trans"
+        android:layout_width="wrap_content"
+        app:cardCornerRadius="40dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+
+            android:id="@+id/imageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo" />
+
+    ù</androidx.cardview.widget.CardView>
+
+    <TextView
+        android:layout_toEndOf="@id/cardView"
+        android:layout_margin="10dp"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nome cognome"
+        android:textSize="14sp"
+        android:textColor="#FFF"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:paddingBottom="4dp"
+        android:id="@+id/nomeCognomeTextview" />
+
+</RelativeLayout>

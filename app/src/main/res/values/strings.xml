@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Palermo2Go</string>
+    <string name="email_o_numero_di_telefono">Email o numero di telefono</string>
+    <string name="accedi">Accedi</string>
+    <string name="inserisci_le_credenziali_per_accedere">Inserisci le credenziali per accedere</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="registrati">Registrati</string>
+    <string name="nome">Nome</string>
+    <string name="cognome">Cognome</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="conferma_email">Conferma Email</string>
+    <string name="conferma_password">Conferma Password</string>
+    <string name="data_di_nascita">Data di nascita</string>
+    <string name="password_dimenticata">Password dimenticata?</string>
+    <string name="google_maps_key">AIzaSyD8DbYiTFS22dgPDjNIwR26cOuOXtpt5cc</string>
+    <string name="prenota_ora">Prenota ora</string>
+    <string name="menu">Menu</string>
+    <string name="prenotazioni_in_corso">Prenotazioni in corso</string>
+    <string name="prenotazioni_passate">Prenotazioni passate</string>
+    <string name="pagamenti">Pagamenti</string>
+    <string name="carrello">Carrello</string>
+    <string name="openmenu">openMenu</string>
+    <string name="todo">TODO</string>
+    <string name="attiva">Attiva</string>
+    <string name="disdici">Disdici</string>
+    <string name="parcheggia">Parcheggia</string>
+    <string name="nessuna_prenotazione_in_corso">Nessuna prenotazione in corso</string>
+</resources>

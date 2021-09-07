@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainContainer"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    tools:context=".MainActivity">
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="350dp"
+                android:layout_height="100dp"
+
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
+                android:src="@drawable/logo" />
+
+
+    <TextView
+        android:id="@+id/credentialTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="25dp"
+        android:gravity="center"
+        android:text="@string/inserisci_le_credenziali_per_accedere"
+        android:textColor="@color/primary"
+        android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="20dp"
+            android:id="@+id/texInputLayoutEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/credentialTextView"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="@string/email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primary"
+                tools:ignore="TouchTargetSizeCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/texInputLayoutPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/texInputLayoutEmail"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="@string/password"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/texInputPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="@color/primary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/texInputLayoutPassword"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/accedi"
+                android:textColor="#FFCA28" />
+
+            <TextView
+                android:id="@+id/passwordForgottenTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/loginButton"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/password_dimenticata"
+                android:textColor="@color/primary" />
+
+    <View
+        android:id="@+id/viewSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/primary"
+        android:layout_below="@id/passwordForgottenTextView"
+        android:layout_marginTop="25dp"
+        />
+
+
+    <TextView
+        android:id="@+id/notAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewSeparator"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:text="Non hai un'account? Registrati "
+        android:textColor="@color/primary" />
+
+
+            <Button
+                android:id="@+id/registratiButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/notAccount"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
+                android:text="@string/registrati"
+                android:textColor="#FFCA28" />
+
+</RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</RelativeLayout>

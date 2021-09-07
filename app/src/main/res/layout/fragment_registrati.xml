@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="@color/background"
+    tools:context=".fragments.RegistratiFragment">
+
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_baseline_arrow_circle_left_24"
+        app:tint="@color/primary"
+        android:background="@color/trans"
+        />
+
+
+    <TextView
+        android:id="@+id/registratiTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/registrati"
+        android:textColor="@color/primary"
+        android:textSize="20dp" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_marginTop="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginTop="20dp"
+                android:id="@+id/texInputLayoutName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="@string/nome">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginTop="20dp"
+                android:id="@+id/texInputLayoutSurname"
+                android:layout_below="@+id/texInputLayoutName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="@string/cognome">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputSurname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginTop="20dp"
+                android:id="@+id/texInputLayoutEmail"
+                android:layout_below="@+id/texInputLayoutSurname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="@string/email">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/primary"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginTop="20dp"
+                android:id="@+id/texInputLayoutConfirmEmail"
+                android:layout_below="@+id/texInputLayoutEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="@string/conferma_email">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputConfirmEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/primary"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginTop="20dp"
+                android:id="@+id/texInputLayoutPass"
+                android:layout_below="@+id/texInputLayoutConfirmEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                app:passwordToggleEnabled="true"
+                android:hint="@string/password">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputPass"
+                    android:layout_width="match_parent"
+                    android:inputType="textPassword"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginTop="20dp"
+                android:id="@+id/texInputLayoutConfirmPass"
+                android:layout_below="@+id/texInputLayoutPass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                app:passwordToggleEnabled="true"
+                android:hint="@string/conferma_password">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputConfirmPass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:textColor="@color/primary"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginTop="20dp"
+
+                android:id="@+id/dateTextLayout"
+                android:layout_below="@+id/texInputLayoutConfirmPass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:hint="@string/data_di_nascita">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dateText"
+                    android:clickable="false"
+                    android:focusable="false"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/registratiButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dateTextLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/registrati"
+                android:textColor="#FFCA28" />
+
+        </RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>
