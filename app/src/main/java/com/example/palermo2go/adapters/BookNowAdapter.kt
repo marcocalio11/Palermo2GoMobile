@@ -65,7 +65,7 @@ class BookNowAdapter(private val book: ArrayList<BookModel>, val mapsFragment: M
                             if(s.length > 2) {
                                 number.setText(s[0].toString() + s[1].toString())
                                 Toast.makeText(view.context, "Devi inserire un valore che va da 0 a 24", Toast.LENGTH_SHORT).show()
-                            } else {
+                            } else if(s.isNotEmpty()){
                                 if(s.toString().toInt() > 24 || s.toString().toInt() < 0) {
                                     number.setText(s[0].toString())
                                     Toast.makeText(view.context, "Devi inserire un valore che va da 0 a 24", Toast.LENGTH_SHORT).show()
@@ -107,6 +107,7 @@ class BookNowAdapter(private val book: ArrayList<BookModel>, val mapsFragment: M
 
 
         private fun getCoordinate(location: String, view: View, mapsFragment: MapsFragment): Boolean {
+            Log.e("DESTINAZION", location)
             if(location == "") {
                 Toast.makeText(view.context, "Inserisci una via valida", Toast.LENGTH_SHORT).show()
                 return false
@@ -117,10 +118,13 @@ class BookNowAdapter(private val book: ArrayList<BookModel>, val mapsFragment: M
                 } else {
                     location
                 }
-                val geocoder = Geocoder(view.context, Locale.getDefault())
+
+                Log.e("DESTINAZION",  " 2" + location2)
+                val geocoder = Geocoder(mapsFragment.requireContext(), Locale.getDefault())
                 val addresses = geocoder.getFromLocationName(location2, 1)
                 val address: Address = addresses[0]
-                if(address.latitude != 0.0 && address.longitude != 0.0){
+                if(address.latitude == 0.0 && address.longitude == 0.0){
+                    Log.e("DESTINAZION", "NON VALiA")
                     Toast.makeText(view.context, "Inserisci una via valida", Toast.LENGTH_SHORT).show()
                     return false
                 } else {
