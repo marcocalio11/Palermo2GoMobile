@@ -16,7 +16,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    >
+
+
 
 
     <fragment
@@ -87,15 +88,27 @@
         app:cardElevation="10dp"
         android:layout_width="match_parent"
         app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="@color/trans"
         android:layout_height="wrap_content">
 
         <FrameLayout
+            android:background="@color/trans"
             android:id="@+id/frameContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
 
     </androidx.cardview.widget.CardView>
+
+
+    <ProgressBar
+        android:visibility="gone"
+        android:indeterminateTint="@color/primary"
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
 
 
 </FrameLayout>

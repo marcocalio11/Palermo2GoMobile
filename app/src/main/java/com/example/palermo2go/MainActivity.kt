@@ -11,21 +11,30 @@ import com.example.palermo2go.fragments.RegistratiFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.stdout.greenurb.fragments.MapsFragment
+import android.app.Activity
+import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+
 
 var isLogged = false
-
-lateinit var texInputLayoutEmail: TextInputLayout
-lateinit var textInputEmail: TextInputEditText
-lateinit var texInputLayoutPassword: TextInputLayout
-lateinit var texInputPassword: TextInputEditText
-lateinit var loginButton: Button
-lateinit var passwordForgottenTextView: TextView
-lateinit var registratiButton: Button
 
 
 
 
 class MainActivity : AppCompatActivity() {
+
+
+    lateinit var texInputLayoutEmail: TextInputLayout
+    lateinit var textInputEmail: TextInputEditText
+    lateinit var texInputLayoutPassword: TextInputLayout
+    lateinit var texInputPassword: TextInputEditText
+    lateinit var loginButton: Button
+    lateinit var passwordForgottenTextView: TextView
+    lateinit var registratiButton: Button
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if(!isLogged) {
@@ -39,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+
 
     private fun startFragmentOnBack(fragment: Fragment) {
         supportFragmentManager.beginTransaction().setCustomAnimations(

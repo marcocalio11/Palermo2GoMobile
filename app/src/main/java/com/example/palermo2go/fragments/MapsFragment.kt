@@ -29,8 +29,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.palermo2go.MainActivity
 import com.example.palermo2go.models.BookModel
 import com.example.palermo2go.R
+import com.example.palermo2go.fragments.BookFragment
 import com.example.palermo2go.fragments.BookNowFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -46,27 +48,43 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.stdout.greenurb.adapters.HistoryAdapters
 import com.stdout.greenurb.adapters.InCorsoAdapter
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
 
+    var destBook: String = ""
+    var destinationLon: Double = 0.0
+    var destinationLat: Double = 0.0
+    var timeToBook: Int = 0
+    var bookHour: Int = 0
+    var bookMinute: Int = 0
+    var isToday: Boolean = false
+    var bookCalendar: Calendar? = null
     private lateinit var mMap: GoogleMap
     lateinit var rootView: View
     lateinit var marker: Marker
+    var searchMarker: Marker? = null
     lateinit var locateMeButton: FloatingActionButton
     lateinit var openDrawerButton: FloatingActionButton
     private val REQUESTCODE = 128
     lateinit var locationManager: LocationManager
     var latitude: Double = 0.0
     var longitude: Double = 0.0
+    var latitudeSearch: Double = 0.0
+    var longitudeSearch: Double = 0.0
     var firstOpen = true
     lateinit var bookNowButton: Button
     lateinit var menulaterale: NavigationView
     lateinit var drawer_layout: DrawerLayout
     lateinit var headerView: View
+    var isExpress = false
     lateinit var profileImage: ImageView
     lateinit var nameSurnameTextView: TextView
     lateinit var cartConteiner: CardView
+    lateinit var progressBar: ProgressBar
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,7 +108,32 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         return rootView
     }
 
+    fun moveMapBySearch(lat: Double, lon: Double, isExpress: Boolean){
+        val normalLat = lat + 0.0017
+        mMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(
+                    normalLat,
+                    lon
+                ), 16f
+            )
+        )
+
+        this.latitudeSearch = lat
+        this.longitudeSearch = lon
+        this.isExpress = isExpress
+
+        val icon = requireActivity().getDrawable(R.drawable.pin)?.let { drawableToBitmap(it) }
+        val position = LatLng(
+            lat,
+            lon
+        )
+        searchMarker?.remove()
+        searchMarker = mMap.addMarker(MarkerOptions().position(position).title("position").icon(BitmapDescriptorFactory.fromBitmap(icon)))
+    }
+
     private fun findView() {
+        progressBar = rootView.findViewById(R.id.progressBar)
         cartConteiner = rootView.findViewById(R.id.cartConteiner)
         bookNowButton = rootView.findViewById(R.id.bookNowButton)
         menulaterale = rootView.findViewById(R.id.menulaterale)
@@ -112,12 +155,15 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         ).addToBackStack(null).add(R.id.frameContainer, fragment).commit()
     }
 
+
+
     private fun onClick() {
+
 
         bookNowButton.setOnClickListener {
 
             if(cartConteiner.visibility == View.VISIBLE) {
-                Toast.makeText(rootView.context, "La pagina è già aperta", Toast.LENGTH_LONG).show()
+                Toast.makeText(rootView.context, "La pagina è già aperta", Toast.LENGTH_SHORT).show()
             } else {
                 cartConteiner.visibility = View.VISIBLE
                 startFragment(BookNowFragment(this))
@@ -329,6 +375,23 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             .setNegativeButton("No") { dialog, id -> dialog.cancel() }
         val alert: AlertDialog = builder.create()
         alert.show()
+    }
+
+    fun callBook() {
+        progressBar.visibility = View.VISIBLE
+        Handler().postDelayed({
+            progressBar.visibility = View.GONE
+            startFragmentMain(BookFragment(this))
+        },2000)
+    }
+
+    fun startFragmentMain(fragment: Fragment){
+        requireActivity().supportFragmentManager.beginTransaction().setCustomAnimations(
+            R.anim.slide_in,
+            R.anim.slide_in,
+            R.anim.slide_out,
+            R.anim.slide_out
+        ).addToBackStack(null).add(R.id.drawer_layout, fragment).commit()
     }
 
 }

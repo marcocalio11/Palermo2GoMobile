@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".fragments.BookFragment">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_margin="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_arrow_circle_left_24"
+        android:background="@color/trans"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/risultati_trovati_per_la_tua_prenotazione"
+        android:textColor="@color/primary"
+        android:textSize="25sp" />
+
+    <TextView
+        android:layout_below="@id/resultTextView"
+        android:id="@+id/parameter"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/primary"
+        android:text="@string/risultati_trovati_per_la_tua_prenotazione"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bookRecycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/parameter"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        tools:listitem="@layout/book_now_list" />
+
+</RelativeLayout>

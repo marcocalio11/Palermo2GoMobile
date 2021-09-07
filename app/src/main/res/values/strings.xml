@@ -31,5 +31,12 @@
     <string name="attivando_la_consegna_express_il_mezzo_viene_cosegnato_dove_preferisci_pagando_un_piccolo_supplemento">Attivando la consegna Express, il mezzo viene cosegnato dove preferisci, pagando un piccolo supplemento</string>
     <string name="avanti">Avanti</string>
     <string name="annulla">Annulla</string>
+    <string name="inserisci_data">Inserisci data</string>
+    <string name="inserisci_ora_di_ritiro">Inserisci ora di ritiro</string>
+    <string name="risultati_trovati_per_la_tua_prenotazione">Risultati trovati per la tua prenotazione</string>
+    <string name="vuoi_un_autista">Vuoi un autista</string>
+    <string name="inserisci_per_quante_ore_vuoi_penotare">Inserisci per quante ore vuoi penotare</string>
+    <string name="prenota">Prenota</string>
+    <string name="inserisci_via_di_destinazione">Inserisci via di destinazione</string>
 
 </resources>

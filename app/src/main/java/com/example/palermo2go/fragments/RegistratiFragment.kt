@@ -19,7 +19,7 @@ import android.util.Patterns
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.Toast
-import com.example.palermo2go.texInputPassword
+
 import java.util.*
 
 
@@ -220,8 +220,7 @@ class RegistratiFragment : Fragment() {
             }
         }
 
-        val dateSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)

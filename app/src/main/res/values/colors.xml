@@ -10,5 +10,5 @@
     <color name="trans">#AARRGGBB</color>
     <color name="background">#2F2F2F</color>
     <color name="error">#FF0000</color>
-    <color name="lightTrasparent">#99707070</color>
+    <color name="lightTrasparent">#83707070</color>
 </resources>

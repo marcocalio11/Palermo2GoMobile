@@ -2,11 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/lightTrasparent"
+    android:background="@color/trans"
     android:paddingBottom="20dp"
     tools:context=".fragments.BookNowFragment">
+
+    <LinearLayout
+        android:animateLayoutChanges="true"
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <RelativeLayout
+        android:visibility="visible"
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
 <androidx.cardview.widget.CardView
     android:layout_marginStart="10dp"
@@ -31,29 +44,88 @@
 
     <TextView
         android:id="@+id/expressShippingText"
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_below="@id/searchCardView"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:gravity="center"
-        android:text="@string/attivando_la_consegna_express_il_mezzo_viene_cosegnato_dove_preferisci_pagando_un_piccolo_supplemento"
-        />
+        android:text="@string/attivando_la_consegna_express_il_mezzo_viene_cosegnato_dove_preferisci_pagando_un_piccolo_supplemento" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/expressSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:thumbTint="@color/primary"
+        android:checked="true"
         android:layout_below="@id/expressShippingText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    </RelativeLayout>
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:id="@+id/dateInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:textColorHint="@color/white"
+                    android:background="@color/background"
+                    android:hint="@string/inserisci_data"
+                    android:textColor="@color/primary"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    />
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:textSize="18sp"
+                android:textColor="@color/primary"
+                android:id="@+id/retireTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/inserisci_ora_di_ritiro"/>
+
+            <TimePicker
+                android:layout_below="@id/retireTextView"
+                android:id="@+id/timePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 
     <LinearLayout
-        android:layout_below="@id/expressSwitch"
+        android:layout_below="@id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -95,5 +167,6 @@
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
+
 
 </RelativeLayout>
