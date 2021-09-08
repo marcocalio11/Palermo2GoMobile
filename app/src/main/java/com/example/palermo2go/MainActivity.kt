@@ -10,11 +10,7 @@ import androidx.fragment.app.Fragment
 import com.example.palermo2go.fragments.RegistratiFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.stdout.greenurb.fragments.MapsFragment
-import android.app.Activity
-import android.content.Context
-import android.view.View
-import android.view.inputmethod.InputMethodManager
+import com.example.palermo2go.fragments.MapsFragment
 
 
 var isLogged = false

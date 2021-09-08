@@ -3,22 +3,29 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/cartgradient.xml" value="0.29774774774774776" />
         <entry key="app/src/main/res/drawable/gps.xml" value="0.15675675675675677" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.25" />
         <entry key="app/src/main/res/layout/book_history.xml" value="0.1810810810810811" />
         <entry key="app/src/main/res/layout/book_in_corso_list.xml" value="0.28378378378378377" />
         <entry key="app/src/main/res/layout/book_now_list.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/carrello_dialog.xml" value="0.28378378378378377" />
+        <entry key="app/src/main/res/layout/cart_dialog.xml" value="0.28378378378378377" />
+        <entry key="app/src/main/res/layout/cart_list.xml" value="0.28378378378378377" />
         <entry key="app/src/main/res/layout/drawer_top.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_book.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_book_now.xml" value="0.2445945945945946" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.1427927927927928" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.28378378378378377" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.18693693693693694" />
         <entry key="app/src/main/res/layout/fragment_registrati.xml" value="0.28378378378378377" />
         <entry key="app/src/main/res/layout/home_logged.xml" value="0.1427927927927928" />
         <entry key="app/src/main/res/layout/logged.xml" value="0.28378378378378377" />
         <entry key="app/src/main/res/layout/modal_in_corso.xml" value="0.28378378378378377" />
+        <entry key="app/src/main/res/layout/register_cart_dialog.xml" value="0.28378378378378377" />
         <entry key="app/src/main/res/layout/time_dialog.xml" value="0.18288288288288287" />
+        <entry key="app/src/main/res/layout/view_cart_dialog.xml" value="0.33" />
         <entry key="app/src/main/res/menu/drawer_menu.xml" value="0.28378378378378377" />
       </map>
     </option>

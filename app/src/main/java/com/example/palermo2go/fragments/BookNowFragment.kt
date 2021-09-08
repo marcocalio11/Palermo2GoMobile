@@ -4,8 +4,6 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.location.Address
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.palermo2go.R
 import com.google.android.material.textfield.TextInputEditText
-import com.stdout.greenurb.fragments.MapsFragment
 import android.location.Geocoder
 import android.os.Build
 import android.view.inputmethod.InputMethodManager

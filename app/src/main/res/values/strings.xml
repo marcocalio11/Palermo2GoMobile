@@ -38,5 +38,17 @@
     <string name="inserisci_per_quante_ore_vuoi_penotare">Inserisci per quante ore vuoi penotare</string>
     <string name="prenota">Prenota</string>
     <string name="inserisci_via_di_destinazione">Inserisci via di destinazione</string>
+    <string name="carta">Registra carta</string>
+    <string name="numero_della_cart">Numero della carta</string>
+    <string name="scadenza">Scadenza</string>
+    <string name="registra_carta">Registra carta</string>
+    <string name="cvv">CVV</string>
+    <string name="elimina_carta">Elimina carta</string>
+    <string name="esci_dalla_schermata">Esci dalla schermata</string>
+    <string name="viewCarta">Carta</string>
+    <string name="finisci_corsa">Finisci corsa</string>
+    <string name="carica_patente">Carica patente</string>
+    <string name="paga">paga</string>
+    <string name="chiudi">Chiudi</string>
 
 </resources>

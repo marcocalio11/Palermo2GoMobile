@@ -20,7 +20,7 @@ import com.example.palermo2go.models.BookModel
 import com.example.palermo2go.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
-import com.stdout.greenurb.fragments.MapsFragment
+import com.example.palermo2go.fragments.MapsFragment
 import java.util.*
 import kotlin.collections.ArrayList
 

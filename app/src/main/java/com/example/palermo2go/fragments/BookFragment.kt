@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.palermo2go.R
 import com.example.palermo2go.models.BookModel
 import com.stdout.greenurb.adapters.BookNowAdapter
-import com.stdout.greenurb.fragments.MapsFragment
 import java.util.*
 import kotlin.collections.ArrayList
 
