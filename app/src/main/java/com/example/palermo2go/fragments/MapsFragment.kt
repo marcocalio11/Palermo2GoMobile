@@ -46,10 +46,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.OnCompleteListener
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
 import com.stdout.greenurb.adapters.HistoryAdapters
 import com.stdout.greenurb.adapters.InCorsoAdapter
 import java.util.*
@@ -117,8 +120,26 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         checkIfGpsEnabled()
         requestPermission()
         setLocation()
+//        registerFirebaseToken()
         return rootView
     }
+
+
+//    private fun registerFirebaseToken() {
+//        FirebaseApp.initializeApp(rootView.context)
+//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+//            if (!task.isSuccessful) {
+//                Log.w("TOKEN", "Fetching FCM registration token failed", task.exception)
+//                return@OnCompleteListener
+//            }
+//
+//            // Get new FCM registration token
+//            val token = task.result
+//
+//            Toast.makeText(rootView.context, token.toString(), Toast.LENGTH_SHORT).show()
+//        })
+//    }
+
 
     fun moveMapBySearch(lat: Double, lon: Double, isExpress: Boolean) {
         val normalLat = lat + 0.0017

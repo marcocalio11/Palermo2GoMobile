@@ -3,6 +3,7 @@ package com.example.palermo2go
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 
 import android.widget.Button
 import android.widget.TextView
@@ -11,6 +12,10 @@ import com.example.palermo2go.fragments.RegistratiFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.example.palermo2go.fragments.MapsFragment
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 var isLogged = false
@@ -34,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if(!isLogged) {
+            FirebaseApp.initializeApp(this)
             setContentView(R.layout.logged)
             startFragmentOnBack(MapsFragment())
         } else {

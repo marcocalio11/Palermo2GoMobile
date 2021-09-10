@@ -13,7 +13,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.example.palermo2go.R
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import org.w3c.dom.Text
 
 class ProfileFragment : Fragment() {
@@ -38,8 +41,10 @@ class ProfileFragment : Fragment() {
 
         findView()
         onClick()
+
         return v
     }
+
 
     private fun onClick() {
         closeButton.setOnClickListener {
