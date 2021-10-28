@@ -33,6 +33,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.palermo2go.MainActivity
 import com.example.palermo2go.models.BookModel
 import com.example.palermo2go.R
 import com.example.palermo2go.adapters.CartAdapter
@@ -172,6 +173,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         finishCorsa = rootView.findViewById(R.id.finishCorsa)
         progressBar = rootView.findViewById(R.id.progressBar)
         cartConteiner = rootView.findViewById(R.id.cartConteiner)
+
         bookNowButton = rootView.findViewById(R.id.bookNowButton)
         menulaterale = rootView.findViewById(R.id.menulaterale)
         openDrawerButton = rootView.findViewById(R.id.openDrawerButton)
@@ -248,6 +250,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
                 R.id.cart -> {
                    loadCart()
+                }
+
+                R.id.logout -> {
+                    sharedPreferences.edit().putBoolean("isLogged", false).apply()
+                    sharedPreferences.edit().putString("token", "").apply()
+                    val intent = Intent(rootView.context, MainActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
                 }
 
             }

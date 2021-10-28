@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/cart.xml" value="0.29684684684684687" />
         <entry key="app/src/main/res/drawable/cartgradient.xml" value="0.29774774774774776" />
         <entry key="app/src/main/res/drawable/gps.xml" value="0.15675675675675677" />
+        <entry key="app/src/main/res/drawable/logout.xml" value="0.29684684684684687" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.28378378378378377" />

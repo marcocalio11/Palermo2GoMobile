@@ -26,5 +26,12 @@
             android:id="@+id/cart"
             android:checked="false"
             android:title="@string/carrello" />
+
+        <item
+            android:icon="@drawable/logout"
+            android:id="@+id/logout"
+            android:checked="false"
+            android:title="Logout" />
+
     </group>
 </menu>
