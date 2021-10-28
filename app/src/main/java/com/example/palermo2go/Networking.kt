@@ -1,5 +1,6 @@
 package com.example.palermo2go
 
+import com.example.palermo2go.model.RoadModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import okhttp3.ResponseBody
@@ -12,6 +13,16 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface Networking {
+
+
+    @GET("api/users/bookings?status=booked")
+    fun getActive(
+
+        @retrofit2.http.Header("Authorization") token : String
+
+    ): Call<RoadModel>
+
+
 
     @POST("api/users/login")
     fun login(@Body loginModel: LoginModel): Call<LoginResponse?>

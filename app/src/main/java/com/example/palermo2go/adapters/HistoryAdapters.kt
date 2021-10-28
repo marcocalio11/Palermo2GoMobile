@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.palermo2go.models.BookModel
 import com.example.palermo2go.R
+import com.example.palermo2go.model.Road
 
 
-class HistoryAdapters(private val book: ArrayList<BookModel>) :
+class HistoryAdapters(private val book: ArrayList<Road>) :
     RecyclerView.Adapter<HistoryAdapters.ViewHolder>() {
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
@@ -20,7 +20,7 @@ class HistoryAdapters(private val book: ArrayList<BookModel>) :
         val parcheggia = view.findViewById<Button>(R.id.history)
 
 
-        fun binding(position: Int, book: java.util.ArrayList<BookModel>) {
+        fun binding(position: Int, book: ArrayList<Road>) {
 
         }
     }

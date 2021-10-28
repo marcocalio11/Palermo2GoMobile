@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
     private fun onClick() {
 
         loginButton.setOnClickListener {
+//            Networking.create().login(Networking.LoginModel(textInputEmail.text.toString(), texInputPassword.text.toString())).enqueue(object : retrofit2.Callback<Networking.LoginResponse?>{
           Networking.create().login(Networking.LoginModel("igandalffi+2@gmail.com", "Alberto89")).enqueue(object : retrofit2.Callback<Networking.LoginResponse?>{
                 override fun onResponse(call: Call<Networking.LoginResponse?>, response: Response<Networking.LoginResponse?>) {
 

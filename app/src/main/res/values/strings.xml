@@ -50,5 +50,6 @@
     <string name="carica_patente">Carica patente</string>
     <string name="paga">paga</string>
     <string name="chiudi">Chiudi</string>
+    <string name="partenza_da">Partenza da :</string>
 
 </resources>

@@ -11,13 +11,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.palermo2go.models.BookModel
 import com.example.palermo2go.R
 import com.example.palermo2go.fragments.MapsFragment
+import com.example.palermo2go.model.Road
 
 
 class InCorsoAdapter(
-    private val book: ArrayList<BookModel>,
+    private val book: ArrayList<Road?>,
     val mapsFragment: MapsFragment,
     val incorsoModal: Dialog,
     val nonInCorso: TextView
@@ -29,13 +29,17 @@ class InCorsoAdapter(
         val attiva = view.findViewById<Button>(R.id.attiva)
         val parcheggia = view.findViewById<Button>(R.id.parcheggia)
         val disdici = view.findViewById<Button>(R.id.disdici)
+        val partenza = view.findViewById<TextView>(R.id.partenza)
 
         fun binding(
             position: Int,
-            book: java.util.ArrayList<BookModel>,
+            book: ArrayList<Road?>,
             mapsFragment: MapsFragment,
             incorsoModal: Dialog
         ) {
+
+            partenza.text = view.resources.getText(R.string.partenza_da).toString() + " ${book[position]?.start_location}"
+
             attiva.setOnClickListener {
                 incorsoModal.dismiss()
                 Toast.makeText(

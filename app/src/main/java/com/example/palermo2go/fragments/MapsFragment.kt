@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
 import android.text.Editable
-import android.text.Layout
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
@@ -34,9 +33,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.palermo2go.MainActivity
-import com.example.palermo2go.models.BookModel
+import com.example.palermo2go.Networking
 import com.example.palermo2go.R
 import com.example.palermo2go.adapters.CartAdapter
+import com.example.palermo2go.model.Road
+import com.example.palermo2go.model.RoadModel
 import com.example.palermo2go.models.Cart
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -47,15 +48,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.OnCompleteListener
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.FirebaseApp
-import com.google.firebase.messaging.FirebaseMessaging
 import com.stdout.greenurb.adapters.HistoryAdapters
 import com.stdout.greenurb.adapters.InCorsoAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -95,7 +96,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     lateinit var progressBar: ProgressBar
     lateinit var finishCorsa: Button
     var cart: Cart? = null
-    var arrayBook = ArrayList<BookModel>()
+    var arrayBook = ArrayList<Road?>()
     lateinit var sharedPreferences: SharedPreferences
     lateinit var inCorsoAdapter: InCorsoAdapter
 
@@ -119,10 +120,38 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }, 250)
         findView()
         checkIfGpsEnabled()
+        getCorseAttive()
         requestPermission()
         setLocation()
 //        registerFirebaseToken()
         return rootView
+    }
+
+    private fun getCorseAttive() {
+
+        val finalToken = "Bearer " + sharedPreferences.getString("token", "")
+        Log.e("Bearer", finalToken)
+        if(finalToken == "Bearer "){
+            logout()
+        }
+        Networking.create().getActive(finalToken).enqueue(object: Callback<RoadModel>{
+            override fun onResponse(call: Call<RoadModel>, response: Response<RoadModel>) {
+                if(response.isSuccessful){
+                    if (response.body() != null){
+                        arrayBook = response.body()!!.data
+                    }
+
+                } else {
+                    Log.e("response", "FAILURE")
+                }
+
+            }
+
+            override fun onFailure(call: Call<RoadModel>, t: Throwable) {
+
+            }
+
+        })
     }
 
 
@@ -253,11 +282,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 }
 
                 R.id.logout -> {
-                    sharedPreferences.edit().putBoolean("isLogged", false).apply()
-                    sharedPreferences.edit().putString("token", "").apply()
-                    val intent = Intent(rootView.context, MainActivity::class.java)
-                    startActivity(intent)
-                    requireActivity().finish()
+                    logout()
                 }
 
             }
@@ -270,6 +295,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
            goOnRoad()
        }
 
+    }
+
+    private fun logout() {
+        sharedPreferences.edit().putBoolean("isLogged", false).apply()
+        sharedPreferences.edit().putString("token", "").apply()
+        val intent = Intent(rootView.context, MainActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     private fun loadCart() {
@@ -474,15 +507,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         val nonInCorso = historyModal.findViewById<TextView>(R.id.nonInCorso)
         val title = historyModal.findViewById<TextView>(R.id.title)
         title.text = getString(R.string.prenotazioni_passate)
-        val arrayBook = ArrayList<BookModel>()
+        val arrayBook = ArrayList<Road>()
         historyModal.setCanceledOnTouchOutside(true)
         historyModal.window!!.setWindowAnimations(R.style.DialogNoAnimation)
         //MOKCK
-        arrayBook.add(BookModel())
-        arrayBook.add(BookModel())
-        arrayBook.add(BookModel())
-        arrayBook.add(BookModel())
-        arrayBook.add(BookModel())
+
         val historyAdapters = HistoryAdapters(arrayBook)
         inCorsoRecyclerView.layoutManager =
             LinearLayoutManager(rootView.context, LinearLayoutManager.HORIZONTAL, false)
@@ -500,11 +529,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         incorsoModal.setCanceledOnTouchOutside(true)
         incorsoModal.window!!.setWindowAnimations(R.style.DialogNoAnimation)
         //MOKCK
-        arrayBook.add(BookModel())
-        arrayBook.add(BookModel())
-        arrayBook.add(BookModel())
-        arrayBook.add(BookModel())
-        arrayBook.add(BookModel())
+
         inCorsoAdapter = InCorsoAdapter(arrayBook, this, incorsoModal, nonInCorso)
         inCorsoRecyclerView.layoutManager =
             LinearLayoutManager(rootView.context, LinearLayoutManager.HORIZONTAL, false)
