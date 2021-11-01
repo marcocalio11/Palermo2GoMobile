@@ -16,26 +16,53 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.palermo2go.models.BookModel
 import com.example.palermo2go.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.example.palermo2go.fragments.MapsFragment
+import com.example.palermo2go.model.Veichle
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class BookNowAdapter(private val book: ArrayList<BookModel>, val mapsFragment: MapsFragment) :
+class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: MapsFragment) :
     RecyclerView.Adapter<BookNowAdapter.ViewHolder>() {
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         val detailTextView = view.findViewById<TextView>(R.id.detailTextView)
-
+        val address = view.findViewById<TextView>(R.id.address)
         val image = view.findViewById<ImageView>(R.id.image)
         val prenotaButton = view.findViewById<Button>(R.id.attiva)
         val pilotSwitch = view.findViewById<SwitchMaterial>(R.id.auristaSwitch)
 
-        fun binding(position: Int, book: java.util.ArrayList<BookModel>, mapsFragment: MapsFragment) {
+        fun binding(position: Int, book: ArrayList<Veichle>, mapsFragment: MapsFragment) {
+
+            book[position]!!.vehicle?.let { Log.e("IFIMAGE", it) }
+
+            if(book[position].vehicle == "car") {
+                Log.e("IFIMAGE", "Catr")
+                image.setImageDrawable(view.resources.getDrawable(R.drawable.car, null))
+            } else if(book[position].vehicle == "bike"){
+                Log.e("IFIMAGE", "Bike")
+                image.setImageDrawable(view.resources.getDrawable(R.drawable.bici, null))
+            } else if (book[position].vehicle == "scooter") {
+                Log.e("IFIMAGE", "Scooter")
+                image.setImageDrawable(view.resources.getDrawable(R.drawable.monopattino, null))
+            } else if(book[position].vehicle == "motorcycle") {
+                Log.e("IFIMAGE", "motorino")
+                image.setImageDrawable(view.resources.getDrawable(R.drawable.motorino, null))
+            }
+
+            address.text = address.text.toString() + " ${mapsFragment.indirizzoString}"
+
+            pilotSwitch.visibility = if(book[position].vehicle == "car") {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+
+            detailTextView.text = "Prezzo: ${book[position].price_km} €"
+
             prenotaButton.setOnClickListener {
                 val bookDialog = Dialog(view.context, R.style.Theme_Palermo2Go)
                 bookDialog.setContentView(R.layout.time_dialog)
@@ -44,6 +71,8 @@ class BookNowAdapter(private val book: ArrayList<BookModel>, val mapsFragment: M
                 val destinazioneText = bookDialog.findViewById<TextInputEditText>(R.id.destinazioneText)
                 val prenotaButton = bookDialog.findViewById<Button>(R.id.prenotaButton)
                 var destCheck = false
+
+
 
                 number.addTextChangedListener(object : TextWatcher{
                     override fun beforeTextChanged(

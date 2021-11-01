@@ -11,7 +11,7 @@
 
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="30dp"
-        android:layout_width="250dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content">
 
         <RelativeLayout
@@ -19,36 +19,45 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:src="@color/primary"
-            android:layout_marginBottom="10dp"
-            />
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginBottom="10dp"
+                android:src="@color/primary" />
 
             <TextView
+                android:layout_marginStart="10dp"
                 android:id="@+id/partenza"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/image"
                 android:layout_marginBottom="10dp"
-                android:text="@string/partenza_da"
-                />
+                android:text="@string/partenza_da" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/arrivo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/partenza"
+                android:layout_marginStart="10dp"
+                android:text="@string/consegna" />
 
             <LinearLayout
+                android:id="@+id/linearLayout"
                 android:gravity="center"
-                android:layout_below="@id/partenza"
+                android:layout_below="@id/arrivo"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             <androidx.cardview.widget.CardView
-                android:layout_margin="10dp"
-
-                app:cardCornerRadius="50dp"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="150dp"
                 app:cardBackgroundColor="@color/trans"
                 app:cardElevation="0dp"
+                android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             <Button
@@ -62,33 +71,13 @@
                 />
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:layout_weight="0"
-                app:cardCornerRadius="50dp"
-                app:cardBackgroundColor="@color/trans"
-                app:cardElevation="0dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
 
-            <Button
-
-                android:visibility="gone"
-                android:id="@+id/parcheggia"
-                android:textColor="@color/primary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/parcheggia"
-                />
-
-            </androidx.cardview.widget.CardView>
 
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/trans"
                     app:cardCornerRadius="50dp"
                     app:cardElevation="0dp">
@@ -96,7 +85,7 @@
                     <Button
                         android:visibility="visible"
                         android:id="@+id/disdici"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/image"
                         android:text="@string/disdici"
@@ -104,7 +93,32 @@
 
                 </androidx.cardview.widget.CardView>
 
+
             </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_below="@id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/trans"
+                app:cardCornerRadius="50dp"
+                app:cardElevation="0dp">
+
+                <Button
+                    android:id="@+id/changeData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cambia_partenza_e_ora"
+                    android:textColor="@color/primary"
+                    android:visibility="visible" />
+
+            </androidx.cardview.widget.CardView>
 
 
         </RelativeLayout>

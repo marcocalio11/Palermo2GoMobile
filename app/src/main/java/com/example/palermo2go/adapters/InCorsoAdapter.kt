@@ -27,9 +27,9 @@ class InCorsoAdapter(
 
         val image = view.findViewById<ImageView>(R.id.image)
         val attiva = view.findViewById<Button>(R.id.attiva)
-        val parcheggia = view.findViewById<Button>(R.id.parcheggia)
         val disdici = view.findViewById<Button>(R.id.disdici)
         val partenza = view.findViewById<TextView>(R.id.partenza)
+        val consegna = view.findViewById<TextView>(R.id.arrivo)
 
         fun binding(
             position: Int,
@@ -39,6 +39,7 @@ class InCorsoAdapter(
         ) {
 
             partenza.text = view.resources.getText(R.string.partenza_da).toString() + " ${book[position]?.start_location}"
+            consegna.text = consegna.text.toString() + " ${book[position]?.ride_destination}"
 
             attiva.setOnClickListener {
                 incorsoModal.dismiss()

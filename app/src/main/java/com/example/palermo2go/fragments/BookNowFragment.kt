@@ -46,7 +46,19 @@ class BookNowFragment(val mapsFragment: MapsFragment) : Fragment() {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_book_now, container, false)
         findView()
+//        setInitialView()
         return v
+    }
+
+    fun setInitialView() {
+        val visible = View.VISIBLE
+        view1.visibility = visible
+        textInputEditText.visibility = visible
+        expressSwitch.visibility = visible
+        avantiButton.visibility = visible
+        annullaButton.visibility = visible
+        view2.visibility = View.GONE
+        view3.visibility = View.GONE
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -95,6 +107,7 @@ class BookNowFragment(val mapsFragment: MapsFragment) : Fragment() {
 
         annullaButton.setOnClickListener {
             requireActivity().onBackPressed()
+            mapsFragment.removeMark()
         }
         avantiButton.setOnClickListener {
 
@@ -127,8 +140,13 @@ class BookNowFragment(val mapsFragment: MapsFragment) : Fragment() {
                 } else {
                     mapsFragment.bookHour = hour
                     mapsFragment.bookMinute = minute
+                    if(mapsFragment.isExpress){
+                        mapsFragment.callBook()
+                    } else {
+                        mapsFragment.getStore()
+                    }
+
                     requireActivity().onBackPressed()
-                    mapsFragment.callBook()
                 }
             }
         }
@@ -152,6 +170,7 @@ class BookNowFragment(val mapsFragment: MapsFragment) : Fragment() {
         if(longitude == 0.0 && latitude == 0.0 ){
             Toast.makeText(v.context, "Indirizzo non trovato ($address)", Toast.LENGTH_SHORT).show()
         } else {
+            mapsFragment.indirizzoString = location
             mapsFragment.moveMapBySearch(latitude, longitude, expressSwitch.isChecked)
             setView()
         }
@@ -160,16 +179,22 @@ class BookNowFragment(val mapsFragment: MapsFragment) : Fragment() {
 
     private fun setView() {
       if(view1.visibility == View.VISIBLE) {
+          Log.e("SETVIEW", "1")
           view2.visibility = View.VISIBLE
           view1.visibility = View.GONE
       } else if(view2.visibility == View.VISIBLE) {
+          Log.e("SETVIEW", "2")
           view2.visibility = View.GONE
           view3.visibility = View.VISIBLE
+      } else {
+          Log.e("SETVIEW", "VAI QUI")
       }
     }
 
     override fun onDestroy() {
         mapsFragment.cartConteiner.visibility = View.GONE
+        Log.e("DESTOEY", ":D")
+        mapsFragment.bookNowFragment = null
         super.onDestroy()
     }
 

@@ -42,28 +42,27 @@
         />
 </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/expressShippingText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/searchCardView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:gravity="center"
-        android:text="@string/attivando_la_consegna_express_il_mezzo_viene_cosegnato_dove_preferisci_pagando_un_piccolo_supplemento" />
+        <TextView
+            android:id="@+id/expressShippingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/searchCardView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="@string/attivando_la_consegna_express_il_mezzo_viene_cosegnato_dove_preferisci_pagando_un_piccolo_supplemento" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/expressSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:thumbTint="@color/primary"
-        android:checked="true"
-        android:layout_below="@id/expressShippingText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/expressSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/expressShippingText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:checked="false"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </RelativeLayout>
 

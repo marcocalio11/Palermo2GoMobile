@@ -1,6 +1,7 @@
 package com.example.palermo2go
 
 import com.example.palermo2go.model.RoadModel
+import com.example.palermo2go.model.Veichle
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import okhttp3.ResponseBody
@@ -13,6 +14,52 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface Networking {
+
+    @GET("api/vehicles")
+    fun getVeichle(@retrofit2.http.Header("Authorization") token : String): Call<ResponseVeichle>
+    data class ResponseVeichle(
+        @SerializedName("data")
+        @Expose
+        var data: ArrayList<Veichle>?
+    )
+
+
+    @POST("api/stores")
+    fun getStores(
+        @Body myLatLng: MyLatLng,
+        @retrofit2.http.Header("Authorization") token : String
+    ) : Call<ResponseStores>
+
+    data class ResponseStores(
+        @SerializedName("data")
+        @Expose
+        var data: ArrayList<Stores>?
+    )
+
+    data class MyLatLng(var lat: Double, var lng: Double)
+
+    data class Stores(
+
+        @SerializedName("id")
+        @Expose
+        var id: Int? = null,
+        @SerializedName("address")
+        @Expose
+        var address: String? = null,
+        @SerializedName("lon")
+        @Expose
+        var lon: Double? = null,
+        @SerializedName("lat")
+        @Expose
+        var lat: Double? = null,
+        @SerializedName("distance")
+        @Expose
+        var distance: Double? = null,
+        @SerializedName("heading")
+        @Expose
+        var heading: Double? = null,
+
+        )
 
 
     @GET("api/users/bookings?status=booked")

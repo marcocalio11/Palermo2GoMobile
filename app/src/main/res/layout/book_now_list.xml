@@ -22,10 +22,11 @@
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
-                android:src="@color/primary"
-                />
+                android:scaleType="centerCrop"
+                android:src="@drawable/car" />
 
             <TextView
+                android:layout_marginTop="10dp"
                 android:id="@+id/detailTextView"
                 android:layout_below="@id/image"
                 android:layout_width="wrap_content"
@@ -33,9 +34,18 @@
                 android:layout_centerHorizontal="true"
                 android:text="Dettagli "/>
 
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detailTextView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="@string/partenza" />
+
             <LinearLayout
                 android:gravity="center"
-                android:layout_below="@id/detailTextView"
+                android:layout_below="@id/address"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

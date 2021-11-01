@@ -51,5 +51,8 @@
     <string name="paga">paga</string>
     <string name="chiudi">Chiudi</string>
     <string name="partenza_da">Partenza da :</string>
+    <string name="consegna">Consegna :</string>
+    <string name="cambia_partenza_e_ora">Cambia partenza e ora</string>
+    <string name="partenza">Partenza :</string>
 
 </resources>

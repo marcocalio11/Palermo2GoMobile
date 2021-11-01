@@ -38,6 +38,7 @@ import com.example.palermo2go.R
 import com.example.palermo2go.adapters.CartAdapter
 import com.example.palermo2go.model.Road
 import com.example.palermo2go.model.RoadModel
+import com.example.palermo2go.model.Veichle
 import com.example.palermo2go.models.Cart
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -52,6 +53,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.Gson
 import com.stdout.greenurb.adapters.HistoryAdapters
 import com.stdout.greenurb.adapters.InCorsoAdapter
 import retrofit2.Call
@@ -75,6 +77,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     lateinit var rootView: View
     lateinit var marker: Marker
+    var markerList = ArrayList<Marker>()
     var searchMarker: Marker? = null
     lateinit var locateMeButton: FloatingActionButton
     lateinit var openDrawerButton: FloatingActionButton
@@ -99,7 +102,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     var arrayBook = ArrayList<Road?>()
     lateinit var sharedPreferences: SharedPreferences
     lateinit var inCorsoAdapter: InCorsoAdapter
-
+    var bookNowFragment: BookNowFragment? = null
+    var token = ""
+    var stores: ArrayList<Networking.Stores>? = null
+    var storeIndexClicked = -1
+    var veichleArray = ArrayList<Veichle>()
+    var indirizzoString = ""
 
 
     override fun onCreateView(
@@ -114,10 +122,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             mapFragment!!.getMapAsync(this)
 
             locateMeButton.setOnClickListener {
-                animate()
+                animate(16f)
             }
 
         }, 250)
+        token = "Bearer " + sharedPreferences.getString("token", "")
+
+        val cartNumber =   sharedPreferences.getString("cartNumber", null)
+        val cartExpire =   sharedPreferences.getString("cartExpire", null)
+        val cvv =   sharedPreferences.getString("cvv", null)
+
+        if(cartNumber != null && cartExpire != null && cvv != null){
+            cart = Cart(cartNumber, cartExpire, cvv)
+        }
+
         findView()
         checkIfGpsEnabled()
         getCorseAttive()
@@ -127,14 +145,16 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         return rootView
     }
 
-    private fun getCorseAttive() {
-
-        val finalToken = "Bearer " + sharedPreferences.getString("token", "")
-        Log.e("Bearer", finalToken)
-        if(finalToken == "Bearer "){
+    private fun checkToken() {
+        if(token.isNullOrEmpty()) {
             logout()
         }
-        Networking.create().getActive(finalToken).enqueue(object: Callback<RoadModel>{
+    }
+
+    private fun getCorseAttive() {
+
+        checkToken()
+        Networking.create().getActive(token).enqueue(object: Callback<RoadModel>{
             override fun onResponse(call: Call<RoadModel>, response: Response<RoadModel>) {
                 if(response.isSuccessful){
                     if (response.body() != null){
@@ -172,6 +192,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
 
     fun moveMapBySearch(lat: Double, lon: Double, isExpress: Boolean) {
+
+        if(!isExpress) {
+            return
+        }
+
         val normalLat = lat + 0.0017
         mMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(
@@ -193,9 +218,77 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         )
         searchMarker?.remove()
         searchMarker = mMap.addMarker(
-            MarkerOptions().position(position).title("position")
+            MarkerOptions().position(position).title("Indirizzo Express")
                 .icon(BitmapDescriptorFactory.fromBitmap(icon))
         )
+
+
+    }
+
+     fun getStore() {
+        checkToken()
+
+         Log.e("getStores", "INIT")
+
+         Networking.create().getStores(Networking.MyLatLng(latitude, longitude), token = token).enqueue(object : Callback<Networking.ResponseStores> {
+             override fun onResponse(call: Call<Networking.ResponseStores>, response: Response<Networking.ResponseStores>) {
+                 if(response.isSuccessful){
+                     Log.e("getStores", Gson().toJson(response.body()))
+                     if(response.body()!= null){
+                         stores = response.body()!!.data
+                         addStorePin(response.body()!!.data!!)
+                     }
+                     Toast.makeText(rootView.context, "Scegli lo store tra quelli elencati", Toast.LENGTH_SHORT).show()
+                 } else {
+                     Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+                 }
+             }
+
+             override fun onFailure(call: Call<Networking.ResponseStores>, t: Throwable) {
+                 Log.e("getStores", t.localizedMessage)
+                 Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+             }
+
+         })
+
+    }
+
+    private fun addStorePin(stores: ArrayList<Networking.Stores>) {
+        val icon = requireActivity().getDrawable(R.drawable.pin)?.let { drawableToBitmap(it) }
+        removeMark()
+        markerList = ArrayList()
+        for(store in stores){
+            val latLon = store.lat?.let { store.lon?.let { it1 -> LatLng(it, it1) } }
+            val marker = mMap.addMarker(MarkerOptions()
+                .position(latLon)
+                .title(store.address)
+                .icon(BitmapDescriptorFactory.fromBitmap(icon)
+                ))
+            marker.tag = markerList.size
+            marker.title = ".sizemarkerList"
+            marker.showInfoWindow()
+            markerList.add(
+                marker
+                )
+        }
+
+        mMap.setOnMarkerClickListener(object: GoogleMap.OnMarkerClickListener{
+            override fun onMarkerClick(p0: Marker): Boolean {
+                val position = p0.tag as Int
+                Log.e("setOnMarkerListener", position.toString())
+                indirizzoString = stores[position].address.toString()
+                storeIndexClicked = position
+                getVeichle { value ->
+                    if(value){
+                        startFragmentMain(BookFragment(this@MapsFragment))
+                    }
+                }
+                return true
+            }
+
+        })
+
+        animate(13f)
     }
 
     private fun findView() {
@@ -217,19 +310,27 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     fun startFragment(fragment: Fragment) {
         Log.e("FRAGMENT", "PUSH")
+
         requireActivity().supportFragmentManager.beginTransaction().setCustomAnimations(
             R.anim.slide_in,
             R.anim.slide_in,
             R.anim.slide_out,
             R.anim.slide_out
-        ).addToBackStack(null).add(R.id.frameContainer, fragment).commit()
+        ).addToBackStack(null).replace(R.id.frameContainer, fragment).commit()
+    }
+
+    fun removeMark() {
+        searchMarker?.remove()
+
+        for(value in markerList){
+            value.remove()
+        }
     }
 
 
     private fun onClick() {
-
-
         bookNowButton.setOnClickListener {
+            removeMark()
             if (cart == null) {
                 Toast.makeText(
                     rootView.context,
@@ -242,6 +343,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                     .show()
             } else {
                 cartConteiner.visibility = View.VISIBLE
+                bookNowFragment = BookNowFragment(this)
                 startFragment(BookNowFragment(this))
             }
 
@@ -486,6 +588,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 else -> {
                     registerCart.dismiss()
                     cart = Cart(cartNumber.text.toString(), cartExpire.text.toString(), cvv.text.toString())
+                    sharedPreferences.edit().putString("cartNumber", cartNumber.text.toString()).apply()
+                    sharedPreferences.edit().putString("cartExpire", cartExpire.text.toString()).apply()
+                    sharedPreferences.edit().putString("cvv", cvv.text.toString()).apply()
+
                     Toast.makeText(
                         rootView.context,
                         "Carta registrata con successo",
@@ -606,9 +712,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                             MarkerOptions().position(position).title("position")
                                 .icon(BitmapDescriptorFactory.fromBitmap(icon))
                         )
+
+
                         if (firstOpen) {
                             firstOpen = !firstOpen
-                            animate()
+                            animate(16f)
                         }
                     }, 100)
 
@@ -652,13 +760,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun animate() {
+    private fun animate(value: Float) {
         mMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(
                 LatLng(
                     latitude,
                     longitude
-                ), 16f
+                ), value
             )
         )
     }
@@ -709,15 +817,47 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         alert.show()
     }
 
-    fun callBook() {
+    fun getVeichle(callback: (Boolean) -> Unit) {
         progressBar.visibility = View.VISIBLE
-        Handler().postDelayed({
-            progressBar.visibility = View.GONE
-            startFragmentMain(BookFragment(this))
-        }, 2000)
+        Networking.create().getVeichle(token).enqueue(object: Callback<Networking.ResponseVeichle> {
+            override fun onResponse(call: Call<Networking.ResponseVeichle>, response: Response<Networking.ResponseVeichle>) {
+                progressBar.visibility = View.GONE
+                if(response.isSuccessful){
+                    veichleArray = response.body()?.data!!
+                } else {
+                    Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+                }
+                callback(response.isSuccessful)
+
+            }
+
+            override fun onFailure(call: Call<Networking.ResponseVeichle>, t: Throwable) {
+                callback(false)
+                Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+                progressBar.visibility = View.GONE
+
+            }
+
+        })
+
+    }
+
+    fun callBook() {
+        getVeichle {
+            if(it){
+                Log.e("callBook", "OK ${veichleArray.size}")
+                startFragmentMain(BookFragment(this))
+            } else {
+                Log.e("callBook", "NON OK")
+            }
+        }
+
+
+
     }
 
     fun startFragmentMain(fragment: Fragment) {
+
         requireActivity().supportFragmentManager.beginTransaction().setCustomAnimations(
             R.anim.slide_in,
             R.anim.slide_in,

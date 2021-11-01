@@ -46,8 +46,8 @@ data class Road(
 data class Veichle(
     @SerializedName("id")
     var id: Int?,
-    @SerializedName("veichle")
-    var veichle: String?,
+    @SerializedName("vehicle")
+    var vehicle: String?,
     @SerializedName("price_km")
     var price_km: Double?,
 ) {
