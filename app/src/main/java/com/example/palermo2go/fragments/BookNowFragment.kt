@@ -96,7 +96,7 @@ class BookNowFragment(val mapsFragment: MapsFragment) : Fragment() {
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 mapsFragment.bookCalendar = cal
-                dateInputText.setText("${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH)}/${cal[Calendar.YEAR]}")
+                dateInputText.setText("${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH) + 1}/${cal[Calendar.YEAR]}")
             }
         }
 

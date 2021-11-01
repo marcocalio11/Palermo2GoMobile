@@ -21,6 +21,10 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.example.palermo2go.fragments.MapsFragment
 import com.example.palermo2go.model.Veichle
+import com.google.type.DateTime
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -55,6 +59,13 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
 
             address.text = address.text.toString() + " ${mapsFragment.indirizzoString}"
 
+            mapsFragment.bookCalendar?.set(Calendar.HOUR_OF_DAY, mapsFragment.bookHour)
+            mapsFragment.bookCalendar?.set(Calendar.MINUTE, mapsFragment.bookHour)
+
+            val df: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+            val bookString = df.format(mapsFragment.bookCalendar!!.time)
+
+
             pilotSwitch.visibility = if(book[position].vehicle == "car") {
                 View.VISIBLE
             } else {
@@ -62,6 +73,11 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
             }
 
             detailTextView.text = "Prezzo: ${book[position].price_km} €"
+
+
+
+
+            Log.e("BOOK_START", mapsFragment.bookMinute.toString() + " " + mapsFragment.bookHour.toString() + " " + mapsFragment.bookCalendar?.time.toString())
 
             prenotaButton.setOnClickListener {
                 val bookDialog = Dialog(view.context, R.style.Theme_Palermo2Go)
@@ -93,11 +109,11 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
                         if(s!= null) {
                             if(s.length > 2) {
                                 number.setText(s[0].toString() + s[1].toString())
-                                Toast.makeText(view.context, "Devi inserire un valore che va da 0 a 24", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(view.context, "Devi inserire un valore che va da 0 a 1440(Un Giorno)", Toast.LENGTH_SHORT).show()
                             } else if(s.isNotEmpty()){
-                                if(s.toString().toInt() > 24 || s.toString().toInt() < 0) {
+                                if(s.toString().toInt() > 1440 || s.toString().toInt() < 0) {
                                     number.setText(s[0].toString())
-                                    Toast.makeText(view.context, "Devi inserire un valore che va da 0 a 24", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(view.context, "Devi inserire un valore che va da 0 a 1440(Un giorno)", Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
@@ -111,6 +127,8 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
 
                 prenotaButton.setOnClickListener {
 
+
+
                     destCheck = getCoordinate(destinazioneText.text.toString(), view, mapsFragment)
 
                     if(number.text.toString() == ""){
@@ -120,6 +138,31 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
                     } else if(!destCheck){
                         Toast.makeText(view.context, "Inserisci una via valida", Toast.LENGTH_SHORT).show()
                     } else {
+
+                        val start_date = bookString
+
+                        val minutes = number.text.toString()
+
+                        val veichleId = book[position].id
+
+                        val with_driver = pilotSwitch.isChecked
+
+                        val ride_destination = destinazioneText.text.toString()
+
+                        val positionIndex = mapsFragment.storeIndexClicked
+
+                        val store = if(positionIndex == -1) {
+                            null
+                        } else {
+                            mapsFragment.stores?.get(positionIndex)!!.id
+                        }
+
+                        val start_destination = mapsFragment.indirizzoString
+
+                        val isExpress = positionIndex == -1
+
+
+
                         mapsFragment.timeToBook = number.text.toString().toInt()
                         mapsFragment.destBook = prenotaButton.text.toString()
                         bookDialog.dismiss()

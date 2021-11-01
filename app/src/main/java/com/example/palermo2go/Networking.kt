@@ -15,6 +15,22 @@ import retrofit2.http.POST
 
 interface Networking {
 
+    @POST("api/users/booking")
+    fun confirmBook(
+        @Body body: ConfirmBook,
+        @retrofit2.http.Header("Authorization") token : String
+    )
+    data class ConfirmBook(
+        var startDate: String,
+        var minutes: Int,
+        var vehicle: String,
+        var with_driver: Boolean,
+        var ride_destination: String,
+        var store: String,
+        var start_location: String,
+        var isExpress: Boolean
+    )
+
     @GET("api/vehicles")
     fun getVeichle(@retrofit2.http.Header("Authorization") token : String): Call<ResponseVeichle>
     data class ResponseVeichle(

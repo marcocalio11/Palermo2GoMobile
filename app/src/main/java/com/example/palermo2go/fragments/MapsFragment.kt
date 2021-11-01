@@ -330,6 +330,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private fun onClick() {
         bookNowButton.setOnClickListener {
+            storeIndexClicked = -1
             removeMark()
             if (cart == null) {
                 Toast.makeText(

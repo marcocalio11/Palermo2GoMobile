@@ -35,7 +35,7 @@
     <string name="inserisci_ora_di_ritiro">Inserisci ora di ritiro</string>
     <string name="risultati_trovati_per_la_tua_prenotazione">Risultati trovati per la tua prenotazione</string>
     <string name="vuoi_un_autista">Vuoi un autista</string>
-    <string name="inserisci_per_quante_ore_vuoi_penotare">Inserisci per quante ore vuoi penotare</string>
+    <string name="inserisci_per_quante_ore_vuoi_penotare">Inserisci per quanti minuti vuoi prenotare</string>
     <string name="prenota">Prenota</string>
     <string name="inserisci_via_di_destinazione">Inserisci via di destinazione</string>
     <string name="carta">Registra carta</string>
