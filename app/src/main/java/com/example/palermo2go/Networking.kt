@@ -19,9 +19,9 @@ interface Networking {
     fun confirmBook(
         @Body body: ConfirmBook,
         @retrofit2.http.Header("Authorization") token : String
-    )
+    ): Call<String>
     data class ConfirmBook(
-        var startDate: String,
+        var start_date: String,
         var minutes: Int,
         var vehicle: String,
         var with_driver: Boolean,

@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.graphics.drawable.ColorDrawable
 import android.location.Address
 import android.location.Geocoder
+import android.os.NetworkOnMainThreadException
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -16,16 +17,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.palermo2go.Networking
 import com.example.palermo2go.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.example.palermo2go.fragments.MapsFragment
 import com.example.palermo2go.model.Veichle
 import com.google.type.DateTime
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.security.auth.callback.Callback
 import kotlin.collections.ArrayList
 
 
@@ -107,8 +113,8 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
                         count: Int
                     ) {
                         if(s!= null) {
-                            if(s.length > 2) {
-                                number.setText(s[0].toString() + s[1].toString())
+                            if(s.length > 3) {
+                                number.setText(s[0].toString() + s[1].toString() + s[2].toString())
                                 Toast.makeText(view.context, "Devi inserire un valore che va da 0 a 1440(Un Giorno)", Toast.LENGTH_SHORT).show()
                             } else if(s.isNotEmpty()){
                                 if(s.toString().toInt() > 1440 || s.toString().toInt() < 0) {
@@ -157,14 +163,31 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
                             mapsFragment.stores?.get(positionIndex)!!.id
                         }
 
-                        val start_destination = mapsFragment.indirizzoString
+                        val start_location = mapsFragment.indirizzoString
 
                         val isExpress = positionIndex == -1
 
 
+                        Networking.create().confirmBook(
+                            body = Networking.ConfirmBook(start_date, minutes.toInt(), veichleId.toString(), with_driver, ride_destination,
+                                store.toString(),start_location, isExpress), mapsFragment.token
+                        ).enqueue(object: retrofit2.Callback<String>{
+                            override fun onResponse(
+                                call: Call<String>,
+                                response: Response<String>
+                            ) {
+                                Log.e("confirmBook", response.isSuccessful.toString())
+                            }
+
+                            override fun onFailure(call: Call<String>, t: Throwable) {
+                                Log.e("confirmBook", t.localizedMessage)
+                            }
+
+                        })
 
                         mapsFragment.timeToBook = number.text.toString().toInt()
                         mapsFragment.destBook = prenotaButton.text.toString()
+                        mapsFragment.getCorseAttive()
                         bookDialog.dismiss()
                         mapsFragment.requireActivity().onBackPressed()
                         Toast.makeText(view.context, "Prenotazione compleatata", Toast.LENGTH_SHORT).show()

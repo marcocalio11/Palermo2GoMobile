@@ -151,7 +151,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun getCorseAttive() {
+     fun getCorseAttive() {
 
         checkToken()
         Networking.create().getActive(token).enqueue(object: Callback<RoadModel>{
