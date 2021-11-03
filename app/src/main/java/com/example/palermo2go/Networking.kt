@@ -1,15 +1,18 @@
 package com.example.palermo2go
 
+import android.graphics.Bitmap
 import com.example.palermo2go.model.RoadModel
 import com.example.palermo2go.model.Veichle
 import com.google.gson.Gson
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.io.File
 
 interface Networking {
 
@@ -74,15 +77,14 @@ interface Networking {
         var heading: Double? = null,
 
         )
-    @Multipart
     @POST("/api/users/propic")
     fun updatePropic(
-        @Part("propic") propic: RequestBody,
+        @Body propic: DataPropic,
         @retrofit2.http.Header("Authorization") token : String
     ): Call<Gson>
 
     data class DataPropic(
-        val propic: String
+        val propic: File
     )
 
     @GET("api/users/bookings?status=booked")

@@ -22,10 +22,9 @@ import retrofit2.Response
 import android.graphics.Bitmap
 import android.util.Base64
 import androidx.core.net.toFile
-import okhttp3.MediaType
-import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.net.URI
 
 
 class ProfileFragment(val userData: Networking.UserData?, val token: String) : Fragment() {
@@ -128,10 +127,10 @@ class ProfileFragment(val userData: Networking.UserData?, val token: String) : F
 
                     imageView.setImageBitmap(bitmap)
 
-                    val requestBody = RequestBody
-                        .create(MediaType.parse("image/*"), imageUri!!.path!!)
 
-                    Networking.create().updatePropic(requestBody, token).enqueue(object : Callback<Gson>{
+                    val file = File(URI(data.data!!.path))
+
+                    Networking.create().updatePropic(Networking.DataPropic(file), token).enqueue(object : Callback<Gson>{
                         override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
 
                         }

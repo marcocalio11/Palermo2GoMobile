@@ -50,6 +50,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         sharedPreference = getSharedPreferences("com.example.palermo2go", Context.MODE_PRIVATE)
         isLogged = sharedPreference.getBoolean("isLogged", false)
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("TAGTOKR", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+
+            if (token != null) {
+                Log.d("TAGTOKR", token)
+            }
+
+        })
+
         if(isLogged) {
             setContentView(R.layout.logged)
             startFragmentOnBack(MapsFragment())

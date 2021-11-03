@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -30,6 +31,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.palermo2go.MainActivity
@@ -61,6 +63,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
+import android.content.IntentFilter
+
+
+
 
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
@@ -145,9 +151,33 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         getCorseAttive()
         requestPermission()
         setLocation()
+
 //        registerFirebaseToken()
         return rootView
     }
+
+
+    override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(rootView.context).registerReceiver(
+            mMessageReceiver,
+            IntentFilter("MyData")
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(rootView.context).unregisterReceiver(mMessageReceiver)
+    }
+
+    private val mMessageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.extras?.getString("corsa")
+            Log.e("NOTIFICA", "$action ")
+        }
+    }
+
+
 
     private fun getLoggedUser() {
         checkToken()
@@ -668,7 +698,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
         val historyAdapters = HistoryAdapters(historyBook, nonInCorso)
         inCorsoRecyclerView.layoutManager =
-            LinearLayoutManager(rootView.context, LinearLayoutManager.HORIZONTAL, false,)
+            LinearLayoutManager(rootView.context, LinearLayoutManager.HORIZONTAL, false)
         inCorsoRecyclerView.adapter = historyAdapters
         historyModal.show()
     }
