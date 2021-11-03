@@ -6,21 +6,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.palermo2go.R
 import com.example.palermo2go.model.Road
+import java.util.*
+import kotlin.collections.ArrayList
 
 
-class HistoryAdapters(private val book: ArrayList<Road>) :
+class HistoryAdapters(private val book: ArrayList<Road?>, val nonInCorso: TextView) :
     RecyclerView.Adapter<HistoryAdapters.ViewHolder>() {
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         val image = view.findViewById<ImageView>(R.id.image)
+        val start = view.findViewById<TextView>(R.id.start)
+        val arrive = view.findViewById<TextView>(R.id.arrive)
+        val date = view.findViewById<TextView>(R.id.date)
 
-        val parcheggia = view.findViewById<Button>(R.id.history)
 
 
-        fun binding(position: Int, book: ArrayList<Road>) {
+        fun binding(position: Int, book: ArrayList<Road?>) {
+
+            start.text = start.text.toString() + " ${book[position]?.start_location}"
+            arrive.text = arrive.text.toString() + " ${book[position]?.ride_destination}"
+            val dateString = Date(book[position]?.end_ride_date)
+            date.text = date.text.toString() + " $dateString"
 
         }
     }
@@ -37,6 +47,14 @@ class HistoryAdapters(private val book: ArrayList<Road>) :
     }
 
 
-    override fun getItemCount() = book.size
+    override fun getItemCount(): Int {
+        if(book.size == 0){
+            nonInCorso.text = "Non hai effettuato nessuna prenotazione"
+            nonInCorso.visibility = View.VISIBLE
+        } else {
+            nonInCorso.visibility = View.GONE
+        }
+        return book.size
+    }
 
 }

@@ -26,16 +26,15 @@
         android:textSize="21sp"
         />
 
-    <TextView
-        android:id="@+id/nonInCorso"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:gravity="center"
-        android:text="@string/nessuna_prenotazione_in_corso"
-        android:textColor="@color/primary"
-        android:textSize="18sp"
-        />
+        <TextView
+            android:id="@+id/nonInCorso"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:gravity="center"
+            android:text="@string/nessuna_prenotazione_in_corso"
+            android:textColor="@color/primary"
+            android:textSize="18sp"
+            android:visibility="gone" />
 
 
 

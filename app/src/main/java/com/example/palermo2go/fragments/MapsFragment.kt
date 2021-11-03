@@ -100,6 +100,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     lateinit var finishCorsa: Button
     var cart: Cart? = null
     var arrayBook = ArrayList<Road?>()
+    var historyBook = ArrayList<Road?>()
     lateinit var sharedPreferences: SharedPreferences
     lateinit var inCorsoAdapter: InCorsoAdapter
     var bookNowFragment: BookNowFragment? = null
@@ -108,6 +109,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     var storeIndexClicked = -1
     var veichleArray = ArrayList<Veichle>()
     var indirizzoString = ""
+    lateinit var incorsoModal: Dialog
 
 
     override fun onCreateView(
@@ -152,19 +154,43 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     }
 
      fun getCorseAttive() {
-
         checkToken()
+
+         getHistoryCorse()
+
         Networking.create().getActive(token).enqueue(object: Callback<RoadModel>{
             override fun onResponse(call: Call<RoadModel>, response: Response<RoadModel>) {
                 if(response.isSuccessful){
                     if (response.body() != null){
                         arrayBook = response.body()!!.data
+
                     }
 
                 } else {
                     Log.e("response", "FAILURE")
                 }
 
+            }
+
+            override fun onFailure(call: Call<RoadModel>, t: Throwable) {
+
+            }
+
+        })
+    }
+
+    private fun getHistoryCorse() {
+        Networking.create().getHistory(token).enqueue(object: Callback<RoadModel> {
+            override fun onResponse(call: Call<RoadModel>, response: Response<RoadModel>) {
+                if(response.isSuccessful){
+                    if (response.body() != null){
+                        historyBook = response.body()!!.data
+
+                    }
+
+                } else {
+                    Log.e("response", "FAILURE")
+                }
             }
 
             override fun onFailure(call: Call<RoadModel>, t: Throwable) {
@@ -614,20 +640,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         val nonInCorso = historyModal.findViewById<TextView>(R.id.nonInCorso)
         val title = historyModal.findViewById<TextView>(R.id.title)
         title.text = getString(R.string.prenotazioni_passate)
-        val arrayBook = ArrayList<Road>()
         historyModal.setCanceledOnTouchOutside(true)
         historyModal.window!!.setWindowAnimations(R.style.DialogNoAnimation)
         //MOKCK
 
-        val historyAdapters = HistoryAdapters(arrayBook)
+        val historyAdapters = HistoryAdapters(historyBook, nonInCorso)
         inCorsoRecyclerView.layoutManager =
-            LinearLayoutManager(rootView.context, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(rootView.context, LinearLayoutManager.HORIZONTAL, false,)
         inCorsoRecyclerView.adapter = historyAdapters
         historyModal.show()
     }
 
     private fun openInCorsoModal() {
-        val incorsoModal = Dialog(rootView.context, R.style.Theme_Palermo2Go)
+        incorsoModal = Dialog(rootView.context, R.style.Theme_Palermo2Go)
         incorsoModal.setContentView(R.layout.modal_in_corso)
         incorsoModal.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.lightTrasparent)))
         val inCorsoRecyclerView = incorsoModal.findViewById<RecyclerView>(R.id.inCorsoRecyclerView)
@@ -638,8 +663,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         //MOKCK
 
         inCorsoAdapter = InCorsoAdapter(arrayBook, this, incorsoModal, nonInCorso)
-        inCorsoRecyclerView.layoutManager =
-            LinearLayoutManager(rootView.context, LinearLayoutManager.HORIZONTAL, false)
+        inCorsoRecyclerView.layoutManager = LinearLayoutManager(rootView.context, LinearLayoutManager.HORIZONTAL, false)
         inCorsoRecyclerView.adapter = inCorsoAdapter
         incorsoModal.show()
 
@@ -665,16 +689,36 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         openDrawerButton.visibility = View.VISIBLE
         sharedPreferences.edit().putBoolean("inRoad", false).apply()
-        deleteRoad(indexInRoad)
+        //deleteRoad(indexInRoad)
     }
 
-    fun deleteRoad(position: Int) {
-        arrayBook.removeAt(position)
-        inCorsoAdapter.notifyItemRemoved(position)
-        indexInRoad = 0
-        Handler().postDelayed({
-            inCorsoAdapter.notifyDataSetChanged()
-        }, 300)
+    fun deleteRoad(road: Road?) {
+        checkToken()
+        incorsoModal.dismiss()
+        progressBar.visibility = View.VISIBLE
+       Networking.create().deleteBook(road!!.id.toString(), token).enqueue(object: Callback<Gson>{
+           override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+
+               progressBar.visibility = View.GONE
+
+               if(response.isSuccessful){
+
+                   getCorseAttive()
+
+                   Toast.makeText(rootView.context, "Prenotazione eliminata correttamente", Toast.LENGTH_SHORT).show()
+               } else {
+                   Toast.makeText(rootView.context, "Errore nell'eliminazione", Toast.LENGTH_SHORT).show()
+               }
+           }
+
+           override fun onFailure(call: Call<Gson>, t: Throwable) {
+
+               progressBar.visibility = View.GONE
+
+               Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+           }
+
+       })
     }
 
     private fun setLocation() {

@@ -54,7 +54,7 @@ class InCorsoAdapter(
 
             disdici.setOnClickListener {
                 Log.e("POSITION", position.toString())
-                mapsFragment.deleteRoad(position)
+                mapsFragment.deleteRoad(book[position])
             }
         }
     }

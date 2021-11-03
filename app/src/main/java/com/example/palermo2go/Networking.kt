@@ -2,16 +2,16 @@ package com.example.palermo2go
 
 import com.example.palermo2go.model.RoadModel
 import com.example.palermo2go.model.Veichle
+import com.google.gson.Gson
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import okhttp3.Callback
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface Networking {
 
@@ -86,6 +86,18 @@ interface Networking {
     ): Call<RoadModel>
 
 
+    @GET("api/users/bookings?status=completed")
+    fun getHistory(
+
+        @retrofit2.http.Header("Authorization") token : String
+
+    ): Call<RoadModel>
+
+    @DELETE("/api/users/bookings/{id}")
+    fun deleteBook(
+        @Path("id") id: String,
+        @retrofit2.http.Header("Authorization") token : String
+    ) : Call<Gson>
 
     @POST("api/users/login")
     fun login(@Body loginModel: LoginModel): Call<LoginResponse?>

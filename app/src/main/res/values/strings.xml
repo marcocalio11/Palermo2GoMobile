@@ -54,5 +54,7 @@
     <string name="consegna">Consegna :</string>
     <string name="cambia_partenza_e_ora">Cambia partenza e ora</string>
     <string name="partenza">Partenza :</string>
+    <string name="arrivo">Arrivo:</string>
+    <string name="data">Data:</string>
 
 </resources>

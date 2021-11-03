@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Documents/Università/Programmazione Web/Palermo2GoMobile/app/src/main/res/layout/book_history.xml" value="0.3546875" />
+        <entry key="..\:/Documents/Università/Programmazione Web/Palermo2GoMobile/app/src/main/res/layout/fragment_book_now.xml" value="0.228125" />
+        <entry key="..\:/Documents/Università/Programmazione Web/Palermo2GoMobile/app/src/main/res/layout/modal_in_corso.xml" value="0.3546875" />
         <entry key="app/src/main/res/drawable/cart.xml" value="0.29684684684684687" />
         <entry key="app/src/main/res/drawable/cartgradient.xml" value="0.29774774774774776" />
         <entry key="app/src/main/res/drawable/gps.xml" value="0.15675675675675677" />
