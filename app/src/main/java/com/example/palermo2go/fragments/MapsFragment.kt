@@ -110,6 +110,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     var veichleArray = ArrayList<Veichle>()
     var indirizzoString = ""
     lateinit var incorsoModal: Dialog
+    var userData: Networking.UserData? = null
 
 
     override fun onCreateView(
@@ -139,12 +140,33 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }
 
         findView()
+        getLoggedUser()
         checkIfGpsEnabled()
         getCorseAttive()
         requestPermission()
         setLocation()
 //        registerFirebaseToken()
         return rootView
+    }
+
+    private fun getLoggedUser() {
+        checkToken()
+        Networking.create().getLoggedUser(token).enqueue(object: Callback<Networking.ResponseLoggedUser>{
+            override fun onResponse(call: Call<Networking.ResponseLoggedUser>, response: Response<Networking.ResponseLoggedUser>) {
+                if(response.isSuccessful){
+                    userData = response.body()?.data
+                    nameSurnameTextView.text = userData?.firstName.toString() + " " + userData?.lastName.toString()
+                    if(userData?.propic.isNullOrBlank()) profileImage.setImageDrawable(rootView.resources.getDrawable(R.drawable.account, null))
+                } else {
+
+                }
+            }
+
+            override fun onFailure(call: Call<Networking.ResponseLoggedUser>, t: Throwable) {
+
+            }
+
+        })
     }
 
     private fun checkToken() {
@@ -381,7 +403,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
         profileImage.setOnClickListener {
             drawer_layout.closeDrawer(GravityCompat.START)
-            startFragmentMain(ProfileFragment())
+            startFragmentMain(ProfileFragment(userData, token))
         }
 
         menulaterale.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { menuItem ->

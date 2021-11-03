@@ -13,13 +13,22 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+import com.example.palermo2go.Networking
 import com.example.palermo2go.R
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
-import org.w3c.dom.Text
+import com.google.gson.Gson
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import android.graphics.Bitmap
+import android.util.Base64
+import androidx.core.net.toFile
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import java.io.ByteArrayOutputStream
+import java.io.File
 
-class ProfileFragment : Fragment() {
+
+class ProfileFragment(val userData: Networking.UserData?, val token: String) : Fragment() {
 
     private val OPERATION_CHOOSE_PHOTO: Int = 999
     lateinit var imageView: ImageView
@@ -81,10 +90,15 @@ class ProfileFragment : Fragment() {
         name = v.findViewById(R.id.name)
         surname = v.findViewById(R.id.surname)
         patenteButton = v.findViewById(R.id.patenteButton)
-        if(hasLoaded) {
+
+        name.text = userData?.firstName
+
+        surname.text = userData?.lastName
+
+        if(userData?.drivingLicence == true) {
             patenteButton.visibility = View.GONE
         }
-        if(hasImage) {
+        if(!userData?.propic.isNullOrEmpty()) {
             loadImage()
         } else {
             imageView.setImageDrawable(v.resources.getDrawable(R.drawable.account, null))
@@ -107,12 +121,38 @@ class ProfileFragment : Fragment() {
 
                 } else {
 
+
+
+
                     var bitmap = MediaStore.Images.Media.getBitmap(v.context.contentResolver, data.data)
+
                     imageView.setImageBitmap(bitmap)
+
+                    val requestBody = RequestBody
+                        .create(MediaType.parse("image/*"), imageUri!!.path!!)
+
+                    Networking.create().updatePropic(requestBody, token).enqueue(object : Callback<Gson>{
+                        override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+
+                        }
+
+                        override fun onFailure(call: Call<Gson>, t: Throwable) {
+
+                        }
+
+                    })
 
                 }
             }
         }
+    }
+
+
+    fun getStringImage(bmp: Bitmap): String? {
+        val baos = ByteArrayOutputStream()
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val imageBytes: ByteArray = baos.toByteArray()
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT)
     }
 
 }

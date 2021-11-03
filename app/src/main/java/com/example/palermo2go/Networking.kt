@@ -5,10 +5,8 @@ import com.example.palermo2go.model.Veichle
 import com.google.gson.Gson
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import okhttp3.Callback
-import okhttp3.ResponseBody
+import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -76,7 +74,16 @@ interface Networking {
         var heading: Double? = null,
 
         )
+    @Multipart
+    @POST("/api/users/propic")
+    fun updatePropic(
+        @Part("propic") propic: RequestBody,
+        @retrofit2.http.Header("Authorization") token : String
+    ): Call<Gson>
 
+    data class DataPropic(
+        val propic: String
+    )
 
     @GET("api/users/bookings?status=booked")
     fun getActive(
@@ -84,6 +91,45 @@ interface Networking {
         @retrofit2.http.Header("Authorization") token : String
 
     ): Call<RoadModel>
+
+    @GET("api/users/logged")
+    fun getLoggedUser(
+        @retrofit2.http.Header("Authorization") token : String
+    ): Call<ResponseLoggedUser>
+
+     class ResponseLoggedUser(
+
+         @SerializedName("success")
+         @Expose
+         var success: Boolean? = null,
+         @SerializedName("data")
+         @Expose
+         var data: UserData? = null
+
+     )
+
+
+    class UserData(
+        @SerializedName("firstName")
+        @Expose
+        var firstName: String? = null,
+        @SerializedName("lastName")
+        @Expose
+        var lastName: String? = null,
+        @SerializedName("phone")
+        @Expose
+        var phone: String? = null,
+        @SerializedName("id")
+        @Expose
+        var id: Int? = null,
+        @SerializedName("propic")
+        @Expose
+        var propic: String? = null,
+        @SerializedName("drivingLicence")
+        @Expose
+        var drivingLicence: Boolean? = null
+
+    )
 
 
     @GET("api/users/bookings?status=completed")
