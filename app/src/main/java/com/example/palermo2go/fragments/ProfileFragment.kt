@@ -1,6 +1,7 @@
 package com.example.palermo2go.fragments
 
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -20,11 +21,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.graphics.Bitmap
-import android.util.Base64
-import androidx.core.net.toFile
+import okhttp3.MediaType
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.net.URI
+
+import okhttp3.RequestBody
+import android.os.Environment
+import okhttp3.MultipartBody
+import java.io.FileOutputStream
+import java.lang.Exception
 
 
 class ProfileFragment(val userData: Networking.UserData?, val token: String) : Fragment() {
@@ -105,7 +110,7 @@ class ProfileFragment(val userData: Networking.UserData?, val token: String) : F
     }
 
     private fun loadImage() {
-        TODO("Not yet implemented")
+        //
     }
 
 
@@ -121,37 +126,73 @@ class ProfileFragment(val userData: Networking.UserData?, val token: String) : F
                 } else {
 
 
-
-
                     var bitmap = MediaStore.Images.Media.getBitmap(v.context.contentResolver, data.data)
 
                     imageView.setImageBitmap(bitmap)
 
 
-                    val file = File(URI(data.data!!.path))
+                    val file = bitmapToFile(v.context, bitmap, "propic.jpg")
 
-                    Networking.create().updatePropic(Networking.DataPropic(file), token).enqueue(object : Callback<Gson>{
-                        override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+                    //val file = File(imageUri!!.path)
 
-                        }
 
-                        override fun onFailure(call: Call<Gson>, t: Throwable) {
+                    Log.e("FILEEX", file!!.absolutePath + " " + imageUri)
 
-                        }
+                    val fbody = RequestBody.create(
+                        MediaType.parse("image/*"),
+                       file
+                    )
 
-                    })
+
+                    val multipart = MultipartBody.Part.createFormData("propic", file!!.name, fbody)
+
+
+
+                        Networking.create().updatePropic(multipart, token).enqueue(object : Callback<Gson>{
+                            override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+
+                            }
+
+                            override fun onFailure(call: Call<Gson>, t: Throwable) {
+
+                            }
+
+                        })
+                    }
 
                 }
             }
         }
-    }
 
 
-    fun getStringImage(bmp: Bitmap): String? {
-        val baos = ByteArrayOutputStream()
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val imageBytes: ByteArray = baos.toByteArray()
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT)
+    fun bitmapToFile(
+        context: Context?,
+        bitmap: Bitmap,
+        fileNameToSave: String
+    ): File? {
+        var file: File? = null
+        return try {
+            file = File(
+                Environment.getExternalStorageDirectory()
+                    .toString() + File.separator + fileNameToSave
+            )
+            file.createNewFile()
+
+            //Convert bitmap to byte array
+            val bos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos) // YOU can also save it in JPEG
+            val bitmapdata = bos.toByteArray()
+
+            //write the bytes in file
+            val fos = FileOutputStream(file)
+            fos.write(bitmapdata)
+            fos.flush()
+            fos.close()
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            file // it will return null
+        }
     }
 
 }

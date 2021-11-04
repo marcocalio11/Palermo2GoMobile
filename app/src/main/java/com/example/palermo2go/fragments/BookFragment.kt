@@ -50,10 +50,6 @@ class BookFragment(val mapsFragment: MapsFragment) : Fragment() {
 
     private fun buildRecycler() {
         val array = ArrayList<BookModel>()
-        array.add(BookModel())
-        array.add(BookModel())
-        array.add(BookModel())
-        array.add(BookModel())
         val adapter = BookNowAdapter(mapsFragment.veichleArray, mapsFragment)
         bookRecycler.layoutManager = LinearLayoutManager(v.context, LinearLayoutManager.VERTICAL, false)
         bookRecycler.adapter = adapter

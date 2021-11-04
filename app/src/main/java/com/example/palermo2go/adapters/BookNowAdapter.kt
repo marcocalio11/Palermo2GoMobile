@@ -191,6 +191,7 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
                         bookDialog.dismiss()
                         mapsFragment.requireActivity().onBackPressed()
                         Toast.makeText(view.context, "Prenotazione compleatata", Toast.LENGTH_SHORT).show()
+                        mapsFragment.getCorseAttive()
                     }
                 }
                 bookDialog.setCanceledOnTouchOutside(true)

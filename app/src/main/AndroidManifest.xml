@@ -16,6 +16,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.Palermo2Go"
+        android:usesCleartextTraffic="true"
         tools:targetApi="q">
         <activity
             android:name=".SplashActivity"
@@ -39,6 +40,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+
 
         <service
             android:name="MyFireBaseMessaging"

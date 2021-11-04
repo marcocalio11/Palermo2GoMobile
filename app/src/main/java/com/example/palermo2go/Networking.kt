@@ -1,18 +1,24 @@
 package com.example.palermo2go
 
-import android.graphics.Bitmap
 import com.example.palermo2go.model.RoadModel
 import com.example.palermo2go.model.Veichle
 import com.google.gson.Gson
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import java.io.File
+import okhttp3.OkHttpClient
+import java.lang.Exception
+import java.lang.RuntimeException
+import java.security.SecureRandom
+import java.security.cert.CertificateException
+import java.security.cert.X509Certificate
+import javax.net.ssl.*
+
 
 interface Networking {
 
@@ -77,10 +83,11 @@ interface Networking {
         var heading: Double? = null,
 
         )
+    @Multipart
     @POST("/api/users/propic")
     fun updatePropic(
-        @Body propic: DataPropic,
-        @retrofit2.http.Header("Authorization") token : String
+        @Part propic: MultipartBody.Part,
+        @Header("Authorization") token: String
     ): Call<Gson>
 
     data class DataPropic(
@@ -174,7 +181,10 @@ interface Networking {
 
     companion object {
 
-        var BASE_URL = "https://palermo2go.herokuapp.com/"
+        var BASE_URL = "http://palermo2go.herokuapp.com/"
+
+        //var BASE_URL = "http://palermo2go.herokuapp.com/"
+
 
         fun create() : Networking {
             val retrofit = Retrofit.Builder()
@@ -184,7 +194,11 @@ interface Networking {
             return retrofit.create(Networking::class.java)
 
         }
+
     }
+
+
+
 
 
 }

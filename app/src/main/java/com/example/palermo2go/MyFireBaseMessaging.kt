@@ -23,7 +23,7 @@ class MyFireBaseMessaging: FirebaseMessagingService() {
     override fun onMessageReceived(p0: RemoteMessage) {
         Log.e("NOTIFICA", Gson().toJson(p0.data))
         val intent = Intent("MyData")
-        intent.putExtra("data", p0.data["corsa"] as String)
+        intent.putExtra("corsa", p0.data["corsa"])
         broadcaster!!.sendBroadcast(intent)
         super.onMessageReceived(p0)
     }
