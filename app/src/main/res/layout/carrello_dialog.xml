@@ -28,27 +28,51 @@
             android:textSize="21sp" />
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/cartRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
+        <androidx.cardview.widget.CardView
             android:layout_below="@id/title"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/cart_list" />
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="30dp"
+            android:layout_gravity="center"
+            android:background="@color/background"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:scaleType="centerCrop"
+                    android:id="@+id/imageView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/car" />
+
+                <TextView
+                    android:id="@+id/prezzo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:text="prezzo" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
 
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/total"
-            android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cartRecycler"
-            android:text="Totale : "
-            />
+            android:layout_below="@id/cardView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="Totale : " />
 
         <androidx.cardview.widget.CardView
             android:layout_below="@id/total"

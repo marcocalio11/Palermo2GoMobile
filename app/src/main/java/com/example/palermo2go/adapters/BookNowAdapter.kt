@@ -17,12 +17,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.palermo2go.Helper
 import com.example.palermo2go.Networking
 import com.example.palermo2go.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.example.palermo2go.fragments.MapsFragment
 import com.example.palermo2go.model.Veichle
+import com.google.rpc.Help
 import com.google.type.DateTime
 import retrofit2.Call
 import retrofit2.Response
@@ -49,19 +51,8 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
 
             book[position]!!.vehicle?.let { Log.e("IFIMAGE", it) }
 
-            if(book[position].vehicle == "car") {
-                Log.e("IFIMAGE", "Catr")
-                image.setImageDrawable(view.resources.getDrawable(R.drawable.car, null))
-            } else if(book[position].vehicle == "bike"){
-                Log.e("IFIMAGE", "Bike")
-                image.setImageDrawable(view.resources.getDrawable(R.drawable.bici, null))
-            } else if (book[position].vehicle == "scooter") {
-                Log.e("IFIMAGE", "Scooter")
-                image.setImageDrawable(view.resources.getDrawable(R.drawable.monopattino, null))
-            } else if(book[position].vehicle == "motorcycle") {
-                Log.e("IFIMAGE", "motorino")
-                image.setImageDrawable(view.resources.getDrawable(R.drawable.motorino, null))
-            }
+
+            image.setImageDrawable(view.resources.getDrawable(Helper().getImageByString(book[position]!!.vehicle!!), null))
 
             address.text = address.text.toString() + " ${mapsFragment.indirizzoString}"
 
@@ -86,6 +77,12 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
             Log.e("BOOK_START", mapsFragment.bookMinute.toString() + " " + mapsFragment.bookHour.toString() + " " + mapsFragment.bookCalendar?.time.toString())
 
             prenotaButton.setOnClickListener {
+
+                if(mapsFragment.userData?.drivingLicence.isNullOrEmpty() && (book[position]!!.vehicle == "car")  && !pilotSwitch.isChecked){
+                    Toast.makeText(view.context, "Devi caricare la patente prima di utilizzare questi mezzi", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
                 val bookDialog = Dialog(view.context, R.style.Theme_Palermo2Go)
                 bookDialog.setContentView(R.layout.time_dialog)
                 bookDialog.window?.setBackgroundDrawable(ColorDrawable(view.context.resources.getColor(R.color.lightTrasparent)))
@@ -169,7 +166,7 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
 
 
                         Networking.create().confirmBook(
-                            body = Networking.ConfirmBook(start_date, minutes.toInt(), veichleId.toString(), with_driver, ride_destination,
+                            body = Networking.ConfirmBook(start_date, minutes.toInt(), veichleId!!, with_driver, ride_destination,
                                 store.toString(),start_location, isExpress), mapsFragment.token
                         ).enqueue(object: retrofit2.Callback<String>{
                             override fun onResponse(
@@ -177,6 +174,8 @@ class BookNowAdapter(private val book: ArrayList<Veichle>, val mapsFragment: Map
                                 response: Response<String>
                             ) {
                                 Log.e("confirmBook", response.isSuccessful.toString())
+                                mapsFragment.getCorseAttive()
+
                             }
 
                             override fun onFailure(call: Call<String>, t: Throwable) {

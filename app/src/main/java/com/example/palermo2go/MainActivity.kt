@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 
 import android.widget.Button
 import android.widget.TextView
@@ -17,14 +18,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.example.palermo2go.fragments.MapsFragment
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.FirebaseApp
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.gson.Gson
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
-import javax.security.auth.callback.Callback
 
 
 var isLogged = false
@@ -43,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var passwordForgottenTextView: TextView
     lateinit var registratiButton: Button
     lateinit var sharedPreference: SharedPreferences
+    var maps: MapsFragment? = null
 
 
 
@@ -70,7 +67,8 @@ class MainActivity : AppCompatActivity() {
 
         if(isLogged) {
             setContentView(R.layout.logged)
-            startFragmentOnBack(MapsFragment())
+            maps = MapsFragment(this)
+            startFragmentOnBack(maps!!)
         } else {
             setContentView(R.layout.activity_main)
             findViewLogin()
@@ -137,6 +135,8 @@ class MainActivity : AppCompatActivity() {
         registratiButton = findViewById(R.id.registratiButton)
 
     }
+
+
 
     fun startFragment(fragment: Fragment){
         supportFragmentManager.beginTransaction().setCustomAnimations(

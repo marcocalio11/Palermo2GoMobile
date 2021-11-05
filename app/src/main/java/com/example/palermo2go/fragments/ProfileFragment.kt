@@ -27,12 +27,18 @@ import java.io.File
 
 import okhttp3.RequestBody
 import android.os.Environment
+import android.widget.Toast
+import com.squareup.picasso.Picasso
 import okhttp3.MultipartBody
 import java.io.FileOutputStream
 import java.lang.Exception
 
 
-class ProfileFragment(val userData: Networking.UserData?, val token: String) : Fragment() {
+class ProfileFragment(
+    val userData: Networking.UserData?,
+    val token: String,
+    val profileImage: ImageView
+) : Fragment() {
 
     private val OPERATION_CHOOSE_PHOTO: Int = 999
     lateinit var imageView: ImageView
@@ -99,7 +105,7 @@ class ProfileFragment(val userData: Networking.UserData?, val token: String) : F
 
         surname.text = userData?.lastName
 
-        if(userData?.drivingLicence == true) {
+        if(!userData?.drivingLicence.isNullOrEmpty()) {
             patenteButton.visibility = View.GONE
         }
         if(!userData?.propic.isNullOrEmpty()) {
@@ -110,25 +116,63 @@ class ProfileFragment(val userData: Networking.UserData?, val token: String) : F
     }
 
     private fun loadImage() {
-        //
+        imageView.setImageDrawable(profileImage.drawable)
     }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if(resultCode == -1){
+
+            Log.e("FILEEX", requestCode.toString() + " ${data!=null}")
             //chiama api
-            if(data!= null){
+            if(data!= null || isPick){
                 if(isPick) {
 
-//                    var bitmap = MediaStore.Images.Media.getBitmap(v.context.contentResolver, data.data)
+                   var bitmap = MediaStore.Images.Media.getBitmap(v.context.contentResolver, imageUri)
+
+                    val file = bitmapToFile(v.context, bitmap, "drivingLicence.jpg")
+
+                    patenteButton.visibility = View.GONE
+                    userData!!.drivingLicence = "true"
+
+                    //val file = File(imageUri!!.path)
+
+
+                    Log.e("FILEEX", file!!.absolutePath + " " + imageUri)
+
+                    val fbody = RequestBody.create(
+                        MediaType.parse("image/*"),
+                        file
+                    )
+
+
+                    val multipart = MultipartBody.Part.createFormData("driving_licence", file!!.name, fbody)
+
+                    Networking.create().uploadLicence(multipart, token).enqueue(object : Callback<Gson>{
+                        override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+                            if(response.isSuccessful){
+                                Toast.makeText(v.context, "Patente caricata correttamente", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(v.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+
+                            }
+
+                        }
+
+                        override fun onFailure(call: Call<Gson>, t: Throwable) {
+                            Toast.makeText(v.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+                        }
+
+                    })
 
 
                 } else {
 
 
-                    var bitmap = MediaStore.Images.Media.getBitmap(v.context.contentResolver, data.data)
+                    var bitmap = MediaStore.Images.Media.getBitmap(v.context.contentResolver, data!!.data)
 
                     imageView.setImageBitmap(bitmap)
+                    profileImage.setImageBitmap(bitmap)
 
 
                     val file = bitmapToFile(v.context, bitmap, "propic.jpg")
@@ -150,11 +194,17 @@ class ProfileFragment(val userData: Networking.UserData?, val token: String) : F
 
                         Networking.create().updatePropic(multipart, token).enqueue(object : Callback<Gson>{
                             override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+                                if(response.isSuccessful){
+                                    Toast.makeText(v.context, "Immagine aggiornata correttamente", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(v.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+
+                                }
 
                             }
 
                             override fun onFailure(call: Call<Gson>, t: Throwable) {
-
+                                Toast.makeText(v.context, "Errore di rete", Toast.LENGTH_SHORT).show()
                             }
 
                         })

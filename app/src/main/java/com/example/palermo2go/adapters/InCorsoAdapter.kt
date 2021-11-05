@@ -11,9 +11,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.palermo2go.Helper
 import com.example.palermo2go.R
 import com.example.palermo2go.fragments.MapsFragment
 import com.example.palermo2go.model.Road
+import com.google.gson.Gson
+import kotlin.collections.ArrayList
 
 
 class InCorsoAdapter(
@@ -30,6 +33,7 @@ class InCorsoAdapter(
         val disdici = view.findViewById<Button>(R.id.disdici)
         val partenza = view.findViewById<TextView>(R.id.partenza)
         val consegna = view.findViewById<TextView>(R.id.arrivo)
+        val changeData = view.findViewById<Button>(R.id.changeData)
 
         fun binding(
             position: Int,
@@ -38,8 +42,17 @@ class InCorsoAdapter(
             incorsoModal: Dialog
         ) {
 
-            partenza.text = view.resources.getText(R.string.partenza_da).toString() + " ${book[position]?.start_location}"
+            partenza.text = view.resources.getText(R.string.partenza_da).toString() + "${book[position]?.start_location}"
             consegna.text = consegna.text.toString() + " ${book[position]?.ride_destination}"
+
+            Log.e("VEICOLO", Gson().toJson(book[position]?.veichle))
+
+            image.setImageDrawable(view.resources.getDrawable(Helper().getImageByString(book[position]!!.veichle!!.vehicle!!), null))
+
+            changeData.setOnClickListener {
+                incorsoModal.dismiss()
+                mapsFragment.changeDateAndPosition(book[position])
+            }
 
             attiva.setOnClickListener {
                 incorsoModal.dismiss()
@@ -48,7 +61,7 @@ class InCorsoAdapter(
                     "Hai sbloccato correttamente il dispositivo",
                     Toast.LENGTH_SHORT
                 ).show()
-                mapsFragment.goOnRoad()
+                mapsFragment.startRide(book[position])
                 mapsFragment.indexInRoad = position
             }
 

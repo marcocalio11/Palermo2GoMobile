@@ -37,7 +37,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.palermo2go.MainActivity
 import com.example.palermo2go.Networking
 import com.example.palermo2go.R
-import com.example.palermo2go.adapters.CartAdapter
 import com.example.palermo2go.model.Road
 import com.example.palermo2go.model.RoadModel
 import com.example.palermo2go.model.Veichle
@@ -64,12 +63,10 @@ import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 import android.content.IntentFilter
+import com.squareup.picasso.Picasso
 
 
-
-
-
-class MapsFragment : Fragment(), OnMapReadyCallback {
+class MapsFragment(val mainActivity: MainActivity) : Fragment(), OnMapReadyCallback {
 
     var indexInRoad: Int = 0
     var destBook: String = ""
@@ -117,6 +114,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     var indirizzoString = ""
     lateinit var incorsoModal: Dialog
     var userData: Networking.UserData? = null
+    var registerCart: Dialog? = null
+    var timeToPay = false
 
 
     override fun onCreateView(
@@ -131,6 +130,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             mapFragment!!.getMapAsync(this)
 
             locateMeButton.setOnClickListener {
+                checkPay()
+                if(!timeToPay)
                 animate(16f)
             }
 
@@ -186,9 +187,17 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 if(response.isSuccessful){
                     userData = response.body()?.data
                     nameSurnameTextView.text = userData?.firstName.toString() + " " + userData?.lastName.toString()
-                    if(userData?.propic.isNullOrBlank()) profileImage.setImageDrawable(rootView.resources.getDrawable(R.drawable.account, null))
-                } else {
 
+                    if(userData?.propic.isNullOrBlank()) {
+                        profileImage.setImageDrawable(rootView.resources.getDrawable(R.drawable.account, null))
+                    } else {
+                        Picasso
+                            .get()
+                            .load(userData!!.propic)
+                            .into(profileImage)
+                    }
+                } else {
+                    logout()
                 }
             }
 
@@ -205,15 +214,16 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-     fun getCorseAttive() {
+    fun getCorseAttive() {
         checkToken()
 
-         getHistoryCorse()
+        getHistoryCorse()
 
         Networking.create().getActive(token).enqueue(object: Callback<RoadModel>{
             override fun onResponse(call: Call<RoadModel>, response: Response<RoadModel>) {
                 if(response.isSuccessful){
                     if (response.body() != null){
+                        Log.e("getActive", Gson().toJson(response.body()))
                         arrayBook = response.body()!!.data
 
                     }
@@ -303,31 +313,31 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     }
 
-     fun getStore() {
+    fun getStore() {
         checkToken()
 
-         Log.e("getStores", "INIT")
+        Log.e("getStores", "INIT")
 
-         Networking.create().getStores(Networking.MyLatLng(latitude, longitude), token = token).enqueue(object : Callback<Networking.ResponseStores> {
-             override fun onResponse(call: Call<Networking.ResponseStores>, response: Response<Networking.ResponseStores>) {
-                 if(response.isSuccessful){
-                     Log.e("getStores", Gson().toJson(response.body()))
-                     if(response.body()!= null){
-                         stores = response.body()!!.data
-                         addStorePin(response.body()!!.data!!)
-                     }
-                     Toast.makeText(rootView.context, "Scegli lo store tra quelli elencati", Toast.LENGTH_SHORT).show()
-                 } else {
-                     Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
-                 }
-             }
+        Networking.create().getStores(Networking.MyLatLng(latitude, longitude), token = token).enqueue(object : Callback<Networking.ResponseStores> {
+            override fun onResponse(call: Call<Networking.ResponseStores>, response: Response<Networking.ResponseStores>) {
+                if(response.isSuccessful){
+                    Log.e("getStores", Gson().toJson(response.body()))
+                    if(response.body()!= null){
+                        stores = response.body()!!.data
+                        addStorePin(response.body()!!.data!!)
+                    }
+                    Toast.makeText(rootView.context, "Scegli lo store tra quelli elencati", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-             override fun onFailure(call: Call<Networking.ResponseStores>, t: Throwable) {
-                 Log.e("getStores", t.localizedMessage)
-                 Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
-             }
+            override fun onFailure(call: Call<Networking.ResponseStores>, t: Throwable) {
+                Log.e("getStores", t.localizedMessage)
+                Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+            }
 
-         })
+        })
 
     }
 
@@ -347,7 +357,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             marker.showInfoWindow()
             markerList.add(
                 marker
-                )
+            )
         }
 
         mMap.setOnMarkerClickListener(object: GoogleMap.OnMarkerClickListener{
@@ -358,6 +368,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 storeIndexClicked = position
                 getVeichle { value ->
                     if(value){
+
+
+                        removeMark()
                         startFragmentMain(BookFragment(this@MapsFragment))
                     }
                 }
@@ -399,7 +412,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     fun removeMark() {
         searchMarker?.remove()
-
         for(value in markerList){
             value.remove()
         }
@@ -408,75 +420,143 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private fun onClick() {
         bookNowButton.setOnClickListener {
-            storeIndexClicked = -1
-            removeMark()
-            if (cart == null) {
-                Toast.makeText(
-                    rootView.context,
-                    "Registra la carta prima di fare una prenotazione",
-                    Toast.LENGTH_SHORT
-                ).show()
-                drawer_layout.openDrawer(GravityCompat.START)
-            } else if (cartConteiner.visibility == View.VISIBLE) {
-                Toast.makeText(rootView.context, "La pagina è già aperta", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                cartConteiner.visibility = View.VISIBLE
-                bookNowFragment = BookNowFragment(this)
-                startFragment(BookNowFragment(this))
-            }
-
-        }
-        openDrawerButton.setOnClickListener {
-            drawer_layout.openDrawer(GravityCompat.START);
-        }
-
-        profileImage.setOnClickListener {
-            drawer_layout.closeDrawer(GravityCompat.START)
-            startFragmentMain(ProfileFragment(userData, token))
-        }
-
-        menulaterale.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { menuItem ->
-            val id = menuItem.itemId
-
-            when (id) {
-                R.id.bookInCorso -> {
-                    Handler().postDelayed({
-                        openInCorsoModal()
-                    }, 100)
-                }
-
-                R.id.lastBook -> {
-                    Handler().postDelayed({
-                        openHistoryModal()
-                    }, 100)
-                }
-
-                R.id.payment -> {
-                    Handler().postDelayed({
-                        showPaymentmodal()
-                    }, 100)
-                }
-
-                R.id.cart -> {
-                   loadCart()
-                }
-
-                R.id.logout -> {
-                    logout()
+            checkPay()
+            if (!timeToPay) {
+                storeIndexClicked = -1
+                removeMark()
+                if (cart == null) {
+                    Toast.makeText(
+                        rootView.context,
+                        "Registra la carta prima di fare una prenotazione",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    drawer_layout.openDrawer(GravityCompat.START)
+                } else if (cartConteiner.visibility == View.VISIBLE) {
+                    Toast.makeText(rootView.context, "La pagina è già aperta", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    cartConteiner.visibility = View.VISIBLE
+                    bookNowFragment = BookNowFragment(this)
+                    startFragment(BookNowFragment(this))
                 }
 
             }
-            drawer_layout.closeDrawer(GravityCompat.START)
-            true
-        })
+        }
+            openDrawerButton.setOnClickListener {
+                checkPay()
+                Log.e("openDrawerButton", timeToPay.toString())
+                if (!timeToPay) {
+                    drawer_layout.openDrawer(GravityCompat.START)
+                };
+            }
 
-       if(sharedPreferences.getBoolean("inRoad", false)) {
-           Toast.makeText(rootView.context, "Status recuperato, sei in una corsa", Toast.LENGTH_SHORT).show()
-           goOnRoad()
-       }
+            profileImage.setOnClickListener {
+                drawer_layout.closeDrawer(GravityCompat.START)
+                startFragmentMain(ProfileFragment(userData, token, profileImage))
+            }
+
+            menulaterale.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { menuItem ->
+                val id = menuItem.itemId
+
+                when (id) {
+                    R.id.bookInCorso -> {
+                        Handler().postDelayed({
+                            openInCorsoModal()
+                        }, 100)
+                    }
+
+                    R.id.lastBook -> {
+                        Handler().postDelayed({
+                            openHistoryModal()
+                        }, 100)
+                    }
+
+                    R.id.payment -> {
+                        Handler().postDelayed({
+                            showPaymentmodal()
+                        }, 100)
+                    }
+
+                    R.id.logout -> {
+                        logout()
+                    }
+
+                }
+                drawer_layout.closeDrawer(GravityCompat.START)
+                true
+            })
+
+        if (sharedPreferences.getBoolean("inRoad", false)) {
+            Toast.makeText(
+                rootView.context,
+                "Status recuperato, sei in una corsa",
+                Toast.LENGTH_SHORT
+            ).show()
+
+
+
+            goOnRoad()
+        }
+
+        checkPay()
+
+        }
+
+
+    fun checkPay(){
+        timeToPay = sharedPreferences.getBoolean("timeToPay", false)
+        if(timeToPay){
+            Toast.makeText(rootView.context, "Status recuperato, ti sei dimenticato di pagare", Toast.LENGTH_SHORT).show()
+            getCorsaInCorso(false)
+        }
 
     }
+
+    private fun getCorsaInCorso(isRepeater: Boolean) {
+        progressBar.visibility = View.VISIBLE
+        Networking.create().getCorsaInCorso(token).enqueue(object : Callback<RoadModel>{
+            override fun onResponse(call: Call<RoadModel>, response: Response<RoadModel>) {
+                progressBar.visibility = View.GONE
+
+                if(response.isSuccessful){
+
+                    openPayModal(response.body())
+
+                } else {
+                    Toast.makeText(rootView.context, "Errore nel reperire la corsa attendere...", Toast.LENGTH_SHORT).show()
+                    if(!isRepeater) getCorsaInCorso(true) else {
+                        Toast.makeText(rootView.context, "Non siamo riusciti a recuperare la corse ti contetteremo a breve", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<RoadModel>, t: Throwable) {
+                progressBar.visibility = View.GONE
+                Toast.makeText(rootView.context, "Errore nel reperire la corsa attendere...", Toast.LENGTH_SHORT).show()
+                if(!isRepeater) getCorsaInCorso(true) else {
+                    Toast.makeText(rootView.context, "Non siamo riusciti a recuperare la corse ti contetteremo a breve", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        })
+    }
+
+    private fun openPayModal(roadModel: RoadModel?) {
+        registerCart = Dialog(rootView.context, R.style.Theme_Palermo2Go)
+        registerCart!!.setContentView(R.layout.carrello_dialog)
+        registerCart!!.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.lightTrasparent)))
+        val prezzo = registerCart!!.findViewById<TextView>(R.id.prezzo)
+        val pagaButton = registerCart!!.findViewById<Button>(R.id.pagaButton)
+        prezzo.text = roadModel?.data?.first()?.price.toString() + " €"
+
+        pagaButton.setOnClickListener {
+            paga(roadModel)
+        }
+
+        registerCart!!.show()
+    }
+
+
 
     private fun logout() {
         sharedPreferences.edit().putBoolean("isLogged", false).apply()
@@ -486,26 +566,30 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         requireActivity().finish()
     }
 
-    private fun loadCart() {
-        val registerCart = Dialog(rootView.context, R.style.Theme_Palermo2Go)
-        registerCart.setContentView(R.layout.carrello_dialog)
-        registerCart.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.lightTrasparent)))
-        val cartRecycler = registerCart.findViewById<RecyclerView>(R.id.cartRecycler)
-        val pagaButton = registerCart.findViewById<Button>(R.id.pagaButton)
-        val cartadpater = CartAdapter(arrayBook, this)
-        cartRecycler.layoutManager = LinearLayoutManager(rootView.context, LinearLayoutManager.VERTICAL, false)
-        cartRecycler.adapter = cartadpater
 
-        pagaButton.setOnClickListener {
-            paga()
-            registerCart.dismiss()
-        }
 
-        registerCart.show()
-    }
+    private fun paga(roadModel: RoadModel?) {
+        progressBar.visibility = View.VISIBLE
+        Networking.create().endRide(roadModel?.data?.first()?.id.toString(), token).enqueue(object: Callback<Gson>{
+            override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+                progressBar.visibility = View.GONE
+                if(response.isSuccessful){
+                    Toast.makeText(rootView.context, "Pagamento effettuato correttamente", Toast.LENGTH_SHORT).show()
+                    getCorseAttive()
+                    getHistoryCorse()
+                    sharedPreferences.edit().remove("timeToPay").apply()
+                    registerCart?.dismiss()
+                } else {
+                    Toast.makeText(rootView.context, "Errore nel pagamento riprova", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-    private fun paga() {
-        //
+            override fun onFailure(call: Call<Gson>, t: Throwable) {
+                progressBar.visibility = View.GONE
+                Toast.makeText(rootView.context, "Errore nel pagamento riprova", Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 
     private fun showPaymentmodal() {
@@ -721,8 +805,30 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     }
 
+    fun startRide(road: Road?) {
+        checkToken()
+        Networking.create().startRide(road!!.id.toString(), token).enqueue(object : Callback<Gson>{
+            override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+                if(response.isSuccessful){
+                    goOnRoad()
+                }else {
+                    Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Gson>, t: Throwable) {
+                Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+
+            }
+
+        })
+    }
+
 
     fun goOnRoad() {
+
+
+
         sharedPreferences.edit().putBoolean("inRoad", true).apply()
         finishCorsa.visibility = View.VISIBLE
         bookNowButton.visibility = View.GONE
@@ -741,6 +847,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         openDrawerButton.visibility = View.VISIBLE
         sharedPreferences.edit().putBoolean("inRoad", false).apply()
+        sharedPreferences.edit().putBoolean("timeToPay", true).apply()
+        getCorsaInCorso(false)
         //deleteRoad(indexInRoad)
     }
 
@@ -748,29 +856,29 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         checkToken()
         incorsoModal.dismiss()
         progressBar.visibility = View.VISIBLE
-       Networking.create().deleteBook(road!!.id.toString(), token).enqueue(object: Callback<Gson>{
-           override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+        Networking.create().deleteBook(road!!.id.toString(), token).enqueue(object: Callback<Gson>{
+            override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
 
-               progressBar.visibility = View.GONE
+                progressBar.visibility = View.GONE
 
-               if(response.isSuccessful){
+                if(response.isSuccessful){
 
-                   getCorseAttive()
+                    getCorseAttive()
 
-                   Toast.makeText(rootView.context, "Prenotazione eliminata correttamente", Toast.LENGTH_SHORT).show()
-               } else {
-                   Toast.makeText(rootView.context, "Errore nell'eliminazione", Toast.LENGTH_SHORT).show()
-               }
-           }
+                    Toast.makeText(rootView.context, "Prenotazione eliminata correttamente", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(rootView.context, "Errore nell'eliminazione", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-           override fun onFailure(call: Call<Gson>, t: Throwable) {
+            override fun onFailure(call: Call<Gson>, t: Throwable) {
 
-               progressBar.visibility = View.GONE
+                progressBar.visibility = View.GONE
 
-               Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
-           }
+                Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
+            }
 
-       })
+        })
     }
 
     private fun setLocation() {
@@ -944,6 +1052,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             if(it){
                 Log.e("callBook", "OK ${veichleArray.size}")
                 startFragmentMain(BookFragment(this))
+                removeMark()
             } else {
                 Log.e("callBook", "NON OK")
             }
@@ -961,6 +1070,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             R.anim.slide_out,
             R.anim.slide_out
         ).addToBackStack(null).add(R.id.drawer_layout, fragment).commit()
+    }
+
+    fun changeDateAndPosition(road: Road?) {
+
+
+
     }
 
 }

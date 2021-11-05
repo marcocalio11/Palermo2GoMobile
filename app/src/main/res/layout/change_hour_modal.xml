@@ -16,15 +16,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/primary"
-        android:text="@string/prenotazioni_in_corso"
-        android:gravity="center"
-        android:textSize="21sp"
-        />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Modifica prenotazione"
+            android:textColor="@color/primary"
+            android:textSize="21sp" />
 
         <TextView
             android:id="@+id/nonInCorso"
@@ -36,17 +35,6 @@
             android:textSize="18sp"
             android:visibility="gone" />
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/inCorsoRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/title"
-            android:orientation="horizontal"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/book_in_corso_list" />
 
     </RelativeLayout>
 

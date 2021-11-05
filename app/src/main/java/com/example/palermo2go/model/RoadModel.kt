@@ -35,7 +35,7 @@ data class Road(
     var end_lon: Double?,
     @SerializedName("isAlerted")
     var isAlerted: Boolean,
-    @SerializedName("veichle")
+    @SerializedName("vehicle")
     var veichle: Veichle?
 
 

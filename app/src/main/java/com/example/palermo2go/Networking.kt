@@ -30,7 +30,7 @@ interface Networking {
     data class ConfirmBook(
         var start_date: String,
         var minutes: Int,
-        var vehicle: String,
+        var vehicle: Int,
         var with_driver: Boolean,
         var ride_destination: String,
         var store: String,
@@ -90,6 +90,13 @@ interface Networking {
         @Header("Authorization") token: String
     ): Call<Gson>
 
+    @Multipart
+    @POST("api/users/driving_licence")
+    fun uploadLicence(
+        @Part driving_licence: MultipartBody.Part,
+        @Header("Authorization") token: String
+    ): Call<Gson>
+
     data class DataPropic(
         val propic: File
     )
@@ -136,10 +143,27 @@ interface Networking {
         var propic: String? = null,
         @SerializedName("drivingLicence")
         @Expose
-        var drivingLicence: Boolean? = null
+        var drivingLicence: String? = null
 
     )
 
+    @POST("/api/users/end_ride/{id}")
+    fun endRide(
+        @Path("id") id: String,
+        @retrofit2.http.Header("Authorization") token : String
+    ): Call<Gson>
+
+    @POST("/api/users/start_ride/{id}")
+    fun startRide(
+        @Path("id") id: String,
+        @retrofit2.http.Header("Authorization") token : String
+    ): Call<Gson>
+
+
+    @GET("api/users/bookings?status=active")
+    fun getCorsaInCorso(
+        @retrofit2.http.Header("Authorization") token : String
+    ): Call<RoadModel>
 
     @GET("api/users/bookings?status=completed")
     fun getHistory(

@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.palermo2go.Helper
 import com.example.palermo2go.R
 import com.example.palermo2go.model.Road
 import java.util.*
@@ -27,10 +28,11 @@ class HistoryAdapters(private val book: ArrayList<Road?>, val nonInCorso: TextVi
 
         fun binding(position: Int, book: ArrayList<Road?>) {
 
+            image.setImageDrawable(view.resources.getDrawable(Helper().getImageByString(book[position]!!.veichle!!.vehicle!!), null))
+
             start.text = start.text.toString() + " ${book[position]?.start_location}"
             arrive.text = arrive.text.toString() + " ${book[position]?.ride_destination}"
-            val dateString = Date(book[position]?.end_ride_date)
-            date.text = date.text.toString() + " $dateString"
+            date.text = date.text.toString() + " ${book[position]?.end_ride_date}"
 
         }
     }

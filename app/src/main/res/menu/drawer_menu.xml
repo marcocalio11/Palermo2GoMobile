@@ -21,11 +21,7 @@
             android:checked="false"
             android:title="@string/pagamenti" />
 
-        <item
-            android:icon="@drawable/cart"
-            android:id="@+id/cart"
-            android:checked="false"
-            android:title="@string/carrello" />
+
 
         <item
             android:icon="@drawable/logout"
