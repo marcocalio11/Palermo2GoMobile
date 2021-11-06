@@ -59,5 +59,8 @@
     <string name="numero_di_telefono">Numero di telefono</string>
     <string name="cambia_destinazione">Cambia destinazione</string>
     <string name="consegna_prevista">Consegna prevista:</string>
+    <string name="cambia_password">Cambia password</string>
+    <string name="vecchia_password">Vecchia password</string>
+    <string name="nuova_password">Nuova password</string>
 
 </resources>

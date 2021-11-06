@@ -28,7 +28,6 @@ import java.io.File
 import okhttp3.RequestBody
 import android.os.Environment
 import android.widget.Toast
-import com.squareup.picasso.Picasso
 import okhttp3.MultipartBody
 import java.io.FileOutputStream
 import java.lang.Exception
@@ -37,7 +36,8 @@ import java.lang.Exception
 class ProfileFragment(
     val userData: Networking.UserData?,
     val token: String,
-    val profileImage: ImageView
+    val profileImage: ImageView,
+    val mapsFragment: MapsFragment
 ) : Fragment() {
 
     private val OPERATION_CHOOSE_PHOTO: Int = 999
@@ -47,6 +47,7 @@ class ProfileFragment(
     lateinit var patenteButton: Button
     lateinit var v: View
     lateinit var closeButton: Button
+    lateinit var cambiaPassword: Button
     var hasLoaded = false
     var hasImage = false
     var imageUri : Uri? = null
@@ -75,6 +76,12 @@ class ProfileFragment(
         patenteButton.setOnClickListener {
             pickImage()
         }
+
+        cambiaPassword.setOnClickListener {
+            requireActivity().onBackPressed()
+            mapsFragment.openPasswordModal()
+        }
+
     }
 
     private fun pickImage(){
@@ -95,6 +102,7 @@ class ProfileFragment(
     }
 
     private fun findView() {
+        cambiaPassword = v.findViewById(R.id.cambiaPassword)
         closeButton = v.findViewById(R.id.closeButton)
         imageView = v.findViewById(R.id.imageView)
         name = v.findViewById(R.id.name)

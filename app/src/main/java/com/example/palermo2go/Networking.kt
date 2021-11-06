@@ -184,6 +184,16 @@ interface Networking {
         @retrofit2.http.Header("Authorization") token : String
     ): Call<Gson>
 
+    @POST("api/users/change_password")
+    fun changePassword(
+        @Body passwordBody: PasswordBody,
+        @retrofit2.http.Header("Authorization") token : String
+    ): Call<Gson>
+
+    data class PasswordBody(
+        val password: String,
+        val newpassword: String
+    )
 
     @GET("api/users/bookings?status=active")
     fun getCorsaInCorso(

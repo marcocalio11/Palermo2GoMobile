@@ -453,7 +453,7 @@ class MapsFragment(val mainActivity: MainActivity) : Fragment(), OnMapReadyCallb
 
             profileImage.setOnClickListener {
                 drawer_layout.closeDrawer(GravityCompat.START)
-                startFragmentMain(ProfileFragment(userData, token, profileImage))
+                startFragmentMain(ProfileFragment(userData, token, profileImage, this))
             }
 
             menulaterale.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { menuItem ->
@@ -564,6 +564,45 @@ class MapsFragment(val mainActivity: MainActivity) : Fragment(), OnMapReadyCallb
         val intent = Intent(rootView.context, MainActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
+    }
+
+    fun openPasswordModal(){
+        val historyModal = Dialog(rootView.context, R.style.Theme_Palermo2Go)
+        historyModal.setContentView(R.layout.change_password_modal)
+        historyModal.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.lightTrasparent)))
+        val vecchia = historyModal.findViewById<TextInputEditText>(R.id.textInputEditText)
+        val newpasswordtext = historyModal.findViewById<TextInputEditText>(R.id.newpasswordtext)
+        val pagaButton = historyModal.findViewById<Button>(R.id.pagaButton)
+        historyModal.window!!.setWindowAnimations(R.style.DialogNoAnimation)
+
+        pagaButton.setOnClickListener {
+            if(vecchia.text?.isNotEmpty() == false && newpasswordtext.text?.isNotEmpty() == false){
+                Toast.makeText(rootView.context, "Inserisci una password", Toast.LENGTH_SHORT).show()
+            } else {
+                if(vecchia.text == newpasswordtext.text){
+                    Toast.makeText(rootView.context, "La vecchia e la nuova password sono uguali", Toast.LENGTH_SHORT).show()
+                } else {
+
+                    Networking.create().changePassword(Networking.PasswordBody(vecchia.text.toString(), newpasswordtext.text.toString()), token).enqueue(object : Callback<Gson>{
+                        override fun onFailure(call: Call<Gson>, t: Throwable) {
+                            Toast.makeText(rootView.context, "Errore di rete la password non è stata cambiata", Toast.LENGTH_SHORT).show()
+                        }
+
+                        override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+                            if (response.isSuccessful){
+                                Toast.makeText(rootView.context, "Password cambiata con successo", Toast.LENGTH_SHORT).show()
+                                historyModal.dismiss()
+                            } else {
+                                Toast.makeText(rootView.context, "Errore di rete la password non è stata cambiata", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                    })
+
+                }
+            }
+        }
+        historyModal.show()
     }
 
 

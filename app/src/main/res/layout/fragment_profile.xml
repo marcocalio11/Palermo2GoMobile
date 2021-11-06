@@ -89,6 +89,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <Button
+                    android:id="@+id/cambiaPassword"
+                    android:background="@color/primary"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/background"
+                    android:layout_height="wrap_content"
+                    android:text="Cambia password"
+                    />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_margin="10dp"
+                android:layout_below="@id/layout"
+                app:cardCornerRadius="200dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
                     android:id="@+id/closeButton"
                     android:background="@color/primary"
                     android:layout_width="match_parent"
