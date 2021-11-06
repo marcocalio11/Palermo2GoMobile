@@ -14,9 +14,6 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
@@ -63,6 +60,7 @@ import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 import android.content.IntentFilter
+import android.location.*
 import com.squareup.picasso.Picasso
 
 
@@ -101,6 +99,7 @@ class MapsFragment(val mainActivity: MainActivity) : Fragment(), OnMapReadyCallb
     lateinit var cartConteiner: CardView
     lateinit var progressBar: ProgressBar
     lateinit var finishCorsa: Button
+    lateinit var changeButtonNowButton: Button
     var cart: Cart? = null
     var arrayBook = ArrayList<Road?>()
     var historyBook = ArrayList<Road?>()
@@ -113,6 +112,7 @@ class MapsFragment(val mainActivity: MainActivity) : Fragment(), OnMapReadyCallb
     var veichleArray = ArrayList<Veichle>()
     var indirizzoString = ""
     lateinit var incorsoModal: Dialog
+    lateinit var consegna: TextView
     var userData: Networking.UserData? = null
     var registerCart: Dialog? = null
     var timeToPay = false
@@ -383,10 +383,11 @@ class MapsFragment(val mainActivity: MainActivity) : Fragment(), OnMapReadyCallb
     }
 
     private fun findView() {
+        consegna = rootView.findViewById(R.id.consegna)
         finishCorsa = rootView.findViewById(R.id.finishCorsa)
         progressBar = rootView.findViewById(R.id.progressBar)
         cartConteiner = rootView.findViewById(R.id.cartConteiner)
-
+        changeButtonNowButton = rootView.findViewById(R.id.changeButtonNowButton)
         bookNowButton = rootView.findViewById(R.id.bookNowButton)
         menulaterale = rootView.findViewById(R.id.menulaterale)
         openDrawerButton = rootView.findViewById(R.id.openDrawerButton)
@@ -810,6 +811,7 @@ class MapsFragment(val mainActivity: MainActivity) : Fragment(), OnMapReadyCallb
             override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
                 if(response.isSuccessful){
                     goOnRoad()
+
                 }else {
                     Toast.makeText(rootView.context, "Errore di rete", Toast.LENGTH_SHORT).show()
                 }
@@ -826,21 +828,67 @@ class MapsFragment(val mainActivity: MainActivity) : Fragment(), OnMapReadyCallb
 
     fun goOnRoad() {
 
-
-
         sharedPreferences.edit().putBoolean("inRoad", true).apply()
         finishCorsa.visibility = View.VISIBLE
         bookNowButton.visibility = View.GONE
         menulaterale.visibility = View.GONE
         openDrawerButton.visibility = View.GONE
         drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        removeMark()
         finishCorsa.setOnClickListener {
             parkVeichle()
         }
+
+        getCorsaInCorsoForButtonChange()
+    }
+
+    private fun getCorsaInCorsoForButtonChange() {
+
+        Networking.create().getCorsaInCorso(token).enqueue(object : Callback<RoadModel>{
+            override fun onResponse(call: Call<RoadModel>, response: Response<RoadModel>) {
+                progressBar.visibility = View.GONE
+                if(response.isSuccessful){
+
+                    changeButtonNowButton.visibility = View.VISIBLE
+                    consegna.visibility = View.VISIBLE
+                    consegna.text = consegna.text.toString() + " \n${response.body()?.data?.first()?.end_ride_date}"
+                    setPinEndRide(response.body()?.data?.first())
+                    changeButtonNowButton.setOnClickListener {
+                        changeDateAndPosition(response.body()!!.data.first())
+                    }
+
+                } else {
+
+                }
+            }
+
+            override fun onFailure(call: Call<RoadModel>, t: Throwable) {
+
+            }
+
+        })
+    }
+
+    private fun setPinEndRide(road: Road?) {
+        removeMark()
+        val geocoder = Geocoder(rootView.context, Locale.getDefault())
+        val addresses = geocoder.getFromLocationName(road!!.ride_destination + " Palermo", 1)
+        if(addresses.size == 0) return
+        val address: Address = addresses[0]
+        val icon = requireActivity().getDrawable(R.drawable.elettric_car)?.let { drawableToBitmap(it) }
+        val position = LatLng(
+            address.latitude,
+            address.longitude
+        )
+        searchMarker?.remove()
+        searchMarker = mMap.addMarker(MarkerOptions().position(position).title("Indirizzo consegna").icon(BitmapDescriptorFactory.fromBitmap(icon))
+        )
     }
 
     private fun parkVeichle() {
         finishCorsa.visibility = View.GONE
+        consegna.visibility = View.GONE
+        changeButtonNowButton.visibility = View.GONE
         bookNowButton.visibility = View.VISIBLE
         menulaterale.visibility = View.VISIBLE
         drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
@@ -1073,7 +1121,114 @@ class MapsFragment(val mainActivity: MainActivity) : Fragment(), OnMapReadyCallb
 
     fun changeDateAndPosition(road: Road?) {
 
+        val bookDialog = Dialog(rootView.context, R.style.Theme_Palermo2Go)
+        bookDialog.setContentView(R.layout.time_dialog)
+        bookDialog.window?.setBackgroundDrawable(ColorDrawable(rootView.context.resources.getColor(R.color.lightTrasparent)))
+        val number = bookDialog.findViewById<TextInputEditText>(R.id.number)
+        number.visibility = View.GONE
+        val destinazioneText = bookDialog.findViewById<TextInputEditText>(R.id.destinazioneText)
+        val prenotaButton = bookDialog.findViewById<Button>(R.id.prenotaButton)
+        var destCheck = false
+        prenotaButton.text = "Cambia destinazione"
 
+
+
+        number.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+                //
+            }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                if(s!= null) {
+                    if(s.length > 3) {
+                        number.setText(s[0].toString() + s[1].toString() + s[2].toString())
+                        Toast.makeText(rootView.context, "Devi inserire un valore che va da 0 a 1440(Un Giorno)", Toast.LENGTH_SHORT).show()
+                    } else if(s.isNotEmpty()){
+                        if(s.toString().toInt() > 1440 || s.toString().toInt() < 0) {
+                            number.setText(s[0].toString())
+                            Toast.makeText(rootView.context, "Devi inserire un valore che va da 0 a 1440(Un giorno)", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                //
+            }
+        })
+
+        prenotaButton.setOnClickListener {
+
+
+
+            destCheck = !destinazioneText.text.toString().isNullOrEmpty()
+
+          if(destinazioneText.text.toString() == "") {
+                Toast.makeText(rootView.context, "Inserisci una via valida", Toast.LENGTH_SHORT).show()
+            } else if(!destCheck){
+                Toast.makeText(rootView.context, "Inserisci una via valida", Toast.LENGTH_SHORT).show()
+            } else {
+
+                val start_date = road!!.start_ride_date
+
+                val minutes = null
+
+                val veichleId = road?.id
+
+                val with_driver =road.with_driver
+
+                val ride_destination = destinazioneText.text.toString()
+
+                val positionIndex = null
+
+                val store = null
+
+                val start_location = road.start_location
+
+                val isExpress = road.is_express
+
+              progressBar.visibility = View.VISIBLE
+                Networking.create().changeDestinationHour(road!!.id.toString(),
+                    body = Networking.ChangeDestBody(ride_destination),
+                    token).enqueue(object: retrofit2.Callback<Gson>{
+                    override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+                        progressBar.visibility = View.GONE
+                        if(response.isSuccessful) {
+                            Log.e("confirmBook", response.isSuccessful.toString())
+                            getCorseAttive()
+                            bookDialog.dismiss()
+                            Toast.makeText(rootView.context, "Destinazione cambiata con successo", Toast.LENGTH_SHORT).show()
+                            if (sharedPreferences.getBoolean("inRoad", false)) {
+                                getCorsaInCorsoForButtonChange()
+                            }
+
+                        }
+                    }
+
+                    override fun onFailure(call: Call<Gson>, t: Throwable) {
+                        Log.e("confirmBook", t.localizedMessage)
+                        progressBar.visibility = View.GONE
+                    }
+
+                })
+
+            }
+        }
+        bookDialog.setCanceledOnTouchOutside(true)
+        bookDialog.window!!.setWindowAnimations(R.style.DialogNoAnimation)
+
+        bookDialog.show()
 
     }
 

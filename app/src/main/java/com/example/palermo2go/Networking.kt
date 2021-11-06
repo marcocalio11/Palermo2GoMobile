@@ -22,6 +22,14 @@ import javax.net.ssl.*
 
 interface Networking {
 
+    @PATCH("/api/users/bookings/{id}")
+    fun changeDestinationHour(
+        @Path("id") id: String,
+        @Body body: ChangeDestBody,
+        @retrofit2.http.Header("Authorization") token : String
+    ): Call <Gson>
+
+    data class ChangeDestBody(var ride_destination: String)
 
     @POST("api/users/register")
     fun register(
@@ -45,14 +53,14 @@ interface Networking {
         @retrofit2.http.Header("Authorization") token : String
     ): Call<String>
     data class ConfirmBook(
-        var start_date: String,
-        var minutes: Int,
-        var vehicle: Int,
-        var with_driver: Boolean,
-        var ride_destination: String,
-        var store: String,
-        var start_location: String,
-        var isExpress: Boolean
+        var start_date: String?,
+        var minutes: Int?,
+        var vehicle: Int?,
+        var with_driver: Boolean?,
+        var ride_destination: String?,
+        var store: String?,
+        var start_location: String?,
+        var isExpress: Boolean?
     )
 
     @GET("api/vehicles")

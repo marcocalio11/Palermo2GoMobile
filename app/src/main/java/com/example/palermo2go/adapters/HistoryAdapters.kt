@@ -27,12 +27,12 @@ class HistoryAdapters(private val book: ArrayList<Road?>, val nonInCorso: TextVi
 
 
         fun binding(position: Int, book: ArrayList<Road?>) {
+            val newPoition = book.size - 1 -position
+            image.setImageDrawable(view.resources.getDrawable(Helper().getImageByString(book[newPoition]!!.veichle!!.vehicle!!), null))
 
-            image.setImageDrawable(view.resources.getDrawable(Helper().getImageByString(book[position]!!.veichle!!.vehicle!!), null))
-
-            start.text = start.text.toString() + " ${book[position]?.start_location}"
-            arrive.text = arrive.text.toString() + " ${book[position]?.ride_destination}"
-            date.text = date.text.toString() + " ${book[position]?.end_ride_date}"
+            start.text = start.text.toString() + " ${book[newPoition]?.start_location}"
+            arrive.text = arrive.text.toString() + " ${book[newPoition]?.ride_destination}"
+            date.text = date.text.toString() + " ${book[newPoition]?.end_ride_date}"
 
         }
     }

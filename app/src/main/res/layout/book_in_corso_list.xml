@@ -56,12 +56,14 @@
             <androidx.cardview.widget.CardView
                 android:layout_margin="5dp"
                 app:cardCornerRadius="150dp"
-                app:cardBackgroundColor="@color/trans"
-                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/lightTrasparent"
+                app:cardElevation="1dp"
                 android:layout_weight="1"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             <Button
+                android:background="@color/trans"
                 android:visibility="visible"
                 android:id="@+id/attiva"
                 android:textColor="@color/primary"
@@ -79,11 +81,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/trans"
+                    app:cardBackgroundColor="@color/lightTrasparent"
                     app:cardCornerRadius="50dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="1dp">
 
                     <Button
+                        android:background="@color/trans"
                         android:visibility="visible"
                         android:id="@+id/disdici"
                         android:layout_width="match_parent"
@@ -97,16 +100,29 @@
 
             </LinearLayout>
 
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linearLayout"
+                android:layout_marginBottom="5dp"
+                app:cardBackgroundColor="@color/lightTrasparent"
+                android:elevation="1dp"
+                >
 
                 <Button
-
                     android:id="@+id/changeData"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/cambia_partenza_e_ora"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@color/trans"
+                    android:text="@string/cambia_destinazione"
                     android:textColor="@color/primary"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
+            </androidx.cardview.widget.CardView>
 
 
 

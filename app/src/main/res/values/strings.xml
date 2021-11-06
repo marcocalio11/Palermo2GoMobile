@@ -57,5 +57,7 @@
     <string name="arrivo">Arrivo:</string>
     <string name="data">Data:</string>
     <string name="numero_di_telefono">Numero di telefono</string>
+    <string name="cambia_destinazione">Cambia destinazione</string>
+    <string name="consegna_prevista">Consegna prevista:</string>
 
 </resources>
