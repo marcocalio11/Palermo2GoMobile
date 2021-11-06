@@ -22,6 +22,23 @@ import javax.net.ssl.*
 
 interface Networking {
 
+
+    @POST("api/users/register")
+    fun register(
+        @Body register: RegisterBody
+    ): Call<Gson>
+
+    data class RegisterBody(
+        var firstName: String,
+        var lastName: String,
+        var email: String,
+        var birth: String,
+        var password: String,
+        var phone: String,
+        var passwordConfirmation: String
+
+    )
+
     @POST("api/users/booking")
     fun confirmBook(
         @Body body: ConfirmBook,
@@ -181,7 +198,7 @@ interface Networking {
     @POST("api/users/login")
     fun login(@Body loginModel: LoginModel): Call<LoginResponse?>
 
-    data class LoginModel(var email: String, var password: String)
+    data class LoginModel(var email: String, var password: String, var hasMobile: Boolean)
 
      class LoginResponse(
 
@@ -226,4 +243,6 @@ interface Networking {
 
 
 }
+
+
 

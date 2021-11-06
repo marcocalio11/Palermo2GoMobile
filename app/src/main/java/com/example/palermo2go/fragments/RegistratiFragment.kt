@@ -19,6 +19,11 @@ import android.util.Patterns
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.Toast
+import com.example.palermo2go.Networking
+import com.google.gson.Gson
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 import java.util.*
 
@@ -43,6 +48,9 @@ class RegistratiFragment : Fragment() {
     lateinit var dateTextLayout: TextInputLayout
     lateinit var dateText: TextInputEditText
     lateinit var registratiButton: Button
+    lateinit var phoneLayout: TextInputLayout
+    lateinit var phone: TextInputEditText
+    var birth: String = ""
 
     var nameCheck = false
     var surnnameCheck = false
@@ -63,6 +71,7 @@ class RegistratiFragment : Fragment() {
         findView()
         onClick()
         textWatcher()
+
         return v
 
     }
@@ -129,6 +138,7 @@ class RegistratiFragment : Fragment() {
 
         })
 
+        texInputLayoutConfirmEmail.visibility=View.GONE
 
         textInputConfirmEmail.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -137,7 +147,8 @@ class RegistratiFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s != null) {
-                    Log.e("ConfirmEmail", s.toString() + " Confidm" + (textInputConfirmEmail.text != textInputEmail.text))
+                    Log.e("ConfirmEmail", s.toString() + " Confidm " + (textInputConfirmEmail.text.toString() != textInputEmail.text.toString()))
+                    Log.e("ConfirmEmail", s.toString() + " confirm  " + (textInputConfirmEmail.text.toString() + " " + textInputEmail.text.toString()))
                     confirmEmailCheck = isValidEmail(s)
                     if(!confirmEmailCheck) {
                         texInputLayoutConfirmEmail.error = "Inserisci un'email valida"
@@ -207,25 +218,66 @@ class RegistratiFragment : Fragment() {
 
         })
 
+        phone.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if(isValidPhoneNumber(s)){
+                    phoneLayout.error = null
+                } else {
+                    phoneLayout.error = "Inserisci un numero di telefono valido"
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+               //
+            }
+
+        })
+
     }
 
     private fun onClick() {
 
         registratiButton.setOnClickListener {
-            if(nameCheck && surnnameCheck && emailCheck && confirmEmailCheck && passwordCheck && confirmPasswordCheck && dateCheck){
-                requireActivity().onBackPressed()
-                Toast.makeText(v.context, "Registrazione avvenuta con successo", Toast.LENGTH_LONG).show()
+            if(nameCheck && surnnameCheck && emailCheck && true && passwordCheck && confirmPasswordCheck && dateCheck && isValidPhoneNumber(phone.text)){
+                Networking.create().register(Networking.RegisterBody(textInputName.text.toString(), textInputSurname.text.toString(), textInputEmail.text.toString(), birth,
+                textInputPass.text.toString(),
+                phone.toString(),
+                textInputConfirmPass.text.toString())).enqueue(object: Callback<Gson>{
+                    override fun onResponse(call: Call<Gson>, response: Response<Gson>) {
+                        if (response.isSuccessful){
+
+                            requireActivity().onBackPressed()
+                            Toast.makeText(v.context, "Registrazione avvenuta con successo", Toast.LENGTH_LONG).show()
+                            Toast.makeText(v.context, "Conferma l'account dall'indirizzo email", Toast.LENGTH_LONG).show()
+
+                        } else {
+                            Toast.makeText(v.context, "Errrore nella registrazione", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<Gson>, t: Throwable) {
+                        Toast.makeText(v.context, "Errrore di rete", Toast.LENGTH_SHORT).show()
+                    }
+
+                })
+
             } else {
                 Toast.makeText(v.context, "Compila tutti i campi", Toast.LENGTH_LONG).show()
             }
         }
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                dateText.setText("${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH)}/${cal[Calendar.YEAR]}")
-                dateCheck = true
+            cal.set(Calendar.YEAR, year)
+            cal.set(Calendar.MONTH, monthOfYear)
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            dateText.setText("${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH)}/${cal[Calendar.YEAR]}")
+            birth = "${cal[Calendar.YEAR]}-${cal[Calendar.MONTH]}-${cal.get(Calendar.DAY_OF_MONTH)}"
+            dateCheck = true
+
             }
 
 
@@ -257,6 +309,8 @@ class RegistratiFragment : Fragment() {
         dateTextLayout = v.findViewById(R.id.dateTextLayout)
         dateText = v.findViewById(R.id.dateText)
         registratiButton = v.findViewById(R.id.registratiButton)
+        phoneLayout = v.findViewById(R.id.phoneLayout)
+        phone = v.findViewById(R.id.phone)
     }
 
 
@@ -264,4 +318,12 @@ class RegistratiFragment : Fragment() {
         return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
     }
 
+}
+
+fun isValidPhoneNumber(target: CharSequence?): Boolean {
+    return if (target == null || TextUtils.isEmpty(target)) {
+        false
+    } else {
+        Patterns.PHONE.matcher(target).matches()
+    }
 }

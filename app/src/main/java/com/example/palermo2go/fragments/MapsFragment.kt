@@ -519,7 +519,6 @@ class MapsFragment(val mainActivity: MainActivity) : Fragment(), OnMapReadyCallb
                 progressBar.visibility = View.GONE
 
                 if(response.isSuccessful){
-
                     openPayModal(response.body())
 
                 } else {
